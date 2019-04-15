@@ -11,6 +11,19 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Auth::routes();
+
+Route::get('/', 'HomeController@index')->name('home');
+
+Route::post('/login','Auth\LoginController@adminLogin');
+Route::get('/logout', 'Auth\LoginController@logout');
+// Route::get('/admin', 'AdminController@index');
+
+Route::group(['middleware' => 'is.admin'], function () {
+    Route::get('/admin', 'AdminController@index');
+});
+
+Route::group(['middleware' => 'is.guest'], function () {
+    Route::get('/verify-user/{code}', 'Auth\RegisterController@activateUser')->name('activate.user');
+    Route::post('/viewlogin','Auth\LoginController@viewLogin');
 });
