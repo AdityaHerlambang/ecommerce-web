@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Admin;
 
 class AdminController extends Controller
 {
@@ -14,7 +15,10 @@ class AdminController extends Controller
     public function index()
     {
         //
-        return view('admin.empty');
+
+        $tableData = Admin::get();
+
+        return view('admin.dataadmin',compact('tableData'));
     }
 
     /**
@@ -22,7 +26,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //
     }
@@ -36,6 +40,31 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         //
+        //
+        $validatedData = $request->validate([
+            'name'     => 'required|string|max:255',
+            'username'    => 'required|string|max:255|unique:admins',
+            'password' => 'required|string|min:6',
+            'phone' => 'required|string|numeric',
+            'imageupload' => 'required|image|mimes:jpeg,png,jpg,gif,svg'
+        ]);
+
+        $image = $request->file('imageupload');
+        $image_name = time().'.'.$image->getClientOriginalExtension();
+        $destinationPath = public_path('/admin_profile_images');
+        $image->move($destinationPath, $image_name);
+
+        $validatedData['profile_image'] = $image_name;
+
+        try {
+            $validatedData['password']        = bcrypt(array_get($validatedData, 'password'));
+            $admin                             = app(Admin::class)->create($validatedData);
+            return redirect()->back();
+        } catch (\Exception $exception) {
+            return "unable to create new user ".$exception;
+            logger()->error($exception);
+            return redirect()->back()->with('error', 'Unable to create new user.');
+        }
     }
 
     /**

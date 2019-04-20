@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -59,7 +60,17 @@ class RegisterController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
+            'imageupload' => 'required|image|mimes:jpeg,png,jpg,gif,svg'
         ]);
+    
+        $image = $request->file('imageupload');
+        $image_name = time().'.'.$image->getClientOriginalExtension();
+        $destinationPath = public_path('/user_profile_images');
+        $image->move($destinationPath, $image_name);
+
+        $validatedData['profile_image'] = $image_name;
+
+        // return $validatedData;
 
         try {
             $validatedData['password']        = bcrypt(array_get($validatedData, 'password'));
@@ -68,11 +79,11 @@ class RegisterController extends Controller
         } catch (\Exception $exception) {
             return "unable to create new user ".$exception;
             logger()->error($exception);
-            return redirect()->back()->with('message', 'Unable to create new user.');
+            return redirect()->back()->with('error', 'Unable to create new user.');
         }
         // return "registered succesfully";
         $user->notify(new UserRegisteredSuccessfully($user));
-        return redirect()->back()->with('message', 'Successfully created a new account. Please check your email and activate your account.');
+        return redirect()->route('viewlogin')->with('registersuccess', 'Successfully created a new account. Please check your email and activate your account.');
     }
 
     /**
@@ -87,10 +98,11 @@ class RegisterController extends Controller
             if (!$user) {
                 return "The code does not exist for any user in our system.";
             }
-            $user->status          = 1;
+            $user->status = 1;
+            $user->email_verified_at = Carbon::now();
             $user->activation_code = null;
             $user->save();
-            return redirect('/viewlogin');
+            return redirect('/viewlogin')->with( ['verifysuccess' => 'Account Verification Successfull ! Now you can login with your account.'] );;
         } catch (\Exception $exception) {
             logger()->error($exception);
             return "Whoops! something went wrong.";

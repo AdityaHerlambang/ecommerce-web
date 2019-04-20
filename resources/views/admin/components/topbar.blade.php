@@ -10,7 +10,7 @@
                 <div class="navbar-header">
                     <a class="navbar-brand" href="index.html">
                         <!-- Logo icon -->
-                        <h2 style="color:white;">Mail<span> <b>Merge</b></span></h2>
+                        <h3 style="color:white;">Shop<span> <b>Admin</b></span></h3>
                     </a>
                 </div>
                 <!-- ============================================================== -->

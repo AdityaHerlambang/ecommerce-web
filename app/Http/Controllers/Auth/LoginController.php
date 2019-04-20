@@ -42,7 +42,7 @@ class LoginController extends Controller
     }
 
     public function viewLogin(){
-        
+        return view('auth.login');
     }
 
     public function adminLogin(Request $request){
@@ -68,7 +68,7 @@ class LoginController extends Controller
             'password' => 'required|min:6'
         ]);
 
-        if (Auth::guard('user')->attempt(['email' => $request->username, 'password' => $request->password], $request->get('remember'))) {
+        if (Auth::guard('user')->attempt(['email' => $request->username, 'password' => $request->password, 'status' => '1'], $request->get('remember'))) {
             return redirect()->intended('/');
         }
         return back()->withInput($request->only('email', 'remember'));

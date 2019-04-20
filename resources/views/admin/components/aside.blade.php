@@ -23,14 +23,14 @@
                     <ul id="sidebarnav">
                         <li class="nav-small-cap">Menu</li>
                         <li>
-                            <a class="waves-effect waves-dark" href="/" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Datasource </span></a>
+                            <a class="waves-effect waves-dark" href="{{url('/admin/dataadmin')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Data Admin </span></a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a class="waves-effect waves-dark" href="/createtemplate" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Create Template </span></a>
                         </li>
                         <li>
                             <a class="waves-effect waves-dark" href="/menugenerate" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Generate </span></a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->

@@ -22,6 +22,7 @@
 	<link rel="stylesheet" type="text/css" href="include/rs-plugin/css/settings.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="include/rs-plugin/css/layers.css">
 	<link rel="stylesheet" type="text/css" href="include/rs-plugin/css/navigation.css">
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 	<!-- Document Title
 	============================================= -->
@@ -125,10 +126,31 @@
 						<h3>Don't have an Account? Register Now.</h3>
 
 						<p>To start shopping and buy some products in this online shop, please fill this form to register your account.</p>
-
-						<form id="register-form" name="register-form" class="nobottommargin" action="{{route('register')}}" method="post">
+						@if ($errors->any())
+							<div class="alert alert-danger">
+								<ul>
+									@foreach ($errors->all() as $error)
+										<li>{{ $error }}</li>
+									@endforeach
+								</ul>
+							</div>
+						@endif
+						@if (Session::has('success'))
+							<script>
+								swal("Success", "{{Session::get('success')}}", "success");
+							</script>
+						@endif
+						<form enctype="multipart/form-data" id="register-form" name="register-form" class="nobottommargin"  action="{{route('register')}}" method="post">
 							@method('POST')
 							@csrf
+
+							<div class="col_full">
+								<label for="register-form-name">Profile Image</label>
+								<input type="file" name="imageupload" value="" class="form-control" />
+							</div>
+	
+							<div class="clear"></div>
+
 							<div class="col_half">
 								<label for="register-form-name">Name:</label>
 								<input type="text" id="register-form-name" name="name" value="" class="form-control" />
