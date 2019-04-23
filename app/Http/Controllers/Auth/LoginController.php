@@ -64,14 +64,14 @@ class LoginController extends Controller
 
     public function userLogin(Request $request){
         $this->validate($request, [
-            'username' => 'required|email',
+            'username' => 'required',
             'password' => 'required|min:6'
         ]);
 
         if (Auth::guard('user')->attempt(['email' => $request->username, 'password' => $request->password, 'status' => '1'], $request->get('remember'))) {
             return redirect()->intended('/');
         }
-        return back()->withInput($request->only('email', 'remember'));
+        return back()->withInput($request->only('username', 'remember'));
     }
 
     public function logout(){

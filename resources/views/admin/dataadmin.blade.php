@@ -84,8 +84,12 @@
                                                 <td>{{$data->phone}}</td>
                                                 <td><img src="{{url('admin_profile_images/'.$data->profile_image)}}" class="img-circle" style="width:50px;height:50px;"> </td>
                                                 <td>
-                                                    <button class="btn btn-primary waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>Edit</button>
-                                                    <button class="btn btn-danger waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-trash"></i></span>Delete</button>
+                                                    <button value="{{$data->id}}" class="btn btn-edit btn-primary waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>Edit</button>
+                                                    <form method='post' action='/admin/dataadmin/{{$data->id}}'>
+                                                        @csrf
+                                                        @method('DELETE')
+                                                            <button class="btn btn-danger waves-effect waves-light" type="submit"><span class="btn-label"><i class="fa fa-trash"></i></span>Delete</button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -114,6 +118,74 @@
                             <form enctype="multipart/form-data" action="{{url('/admin/dataadmin')}}" method="post">
                                 @method('POST')
                                 @csrf
+                                <div class="modal-body">
+                                        {{-- Error Messages --}}
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+                                        <div class="form-group" style="text-align: center">
+                                            <label for="recipient-name" class="control-label">Profile Image</label><br>
+                                            <img id="create-imagepreview" src="{{asset('images/profile-placeholder.jpg')}}" class="img-circle" style="height:100px;width:100px;display:inline-block"><br>
+                                            <input type="file" class="form-control" name="imageupload" value="" onchange="readURL(this);">
+                                            <script>
+                                            function readURL(input) {
+                                                if (input.files && input.files[0]) {
+                                                    var reader = new FileReader();
+
+                                                    reader.onload = function (e) {
+                                                        $('#create-imagepreview')
+                                                            .attr('src', e.target.result);
+                                                    };
+
+                                                    reader.readAsDataURL(input.files[0]);
+                                                }
+                                            }
+                                            </script>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="control-label">Username</label>
+                                            <input type="text" class="form-control" name="username" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="message-text" class="control-label">Password</label>
+                                            <input type="password" class="form-control" name="password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="message-text" class="control-label">Name</label>
+                                            <input type="name" class="form-control" name="name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="message-text" class="control-label">Phone</label>
+                                            <input type="number" class="form-control" name="phone" required>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-success waves-effect waves-light">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal -->
+
+                <!-- Modal Edit -->
+                <div id="modal-edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-edit" aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title">Data Admin</h4>
+                            </div>
+                            <form enctype="multipart/form-data" action="{{url('/admin/dataadmin/')}}" method="post">
+                                @method('PUT')
+                                @csrf
                             <div class="modal-body">
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -126,7 +198,7 @@
                                 @endif
                                     <div class="form-group" style="text-align: center">
                                         <label for="recipient-name" class="control-label">Profile Image</label><br>
-                                        <img id="create-imagepreview" src="{{asset('images/profile-placeholder.jpg')}}" class="img-circle" style="height:100px;width:100px;display:inline-block"><br>
+                                        <img id="edit-imagepreview" src="{{asset('images/profile-placeholder.jpg')}}" class="img-circle" style="height:100px;width:100px;display:inline-block"><br>
                                         <input type="file" class="form-control" name="imageupload" onchange="readURL(this);">
                                         <script>
                                         function readURL(input) {
@@ -145,19 +217,19 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="recipient-name" class="control-label">Username</label>
-                                        <input type="text" class="form-control" name="username" required>
+                                        <input type="text" class="form-control" id="username" name="username" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="message-text" class="control-label">Password</label>
-                                        <input type="password" class="form-control" name="password" required>
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Kosongkan Jika Tidak Ingin Mengubah Password">
                                     </div>
                                     <div class="form-group">
                                         <label for="message-text" class="control-label">Name</label>
-                                        <input type="name" class="form-control" name="name" required>
+                                        <input type="name" class="form-control" id="name" name="name" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="message-text" class="control-label">Phone</label>
-                                        <input type="number" class="form-control" name="phone" required>
+                                        <input type="number" class="form-control" id="phone" name="phone" required>
                                     </div>
                             </div>
                             <div class="modal-footer">
@@ -211,6 +283,32 @@
         lang: 'es'
     });
     </script>
+
+    {{-- Modal CRUD --}}
+
+    <script>
+        jQuery(document).ready(function ($) {
+
+            $(document).on('click','.btn-edit',function(){
+                var url = "{{url('/admin/dataadmin')}}";
+                var id = $(this).val();
+                $.get(url + '/' + id, function (data) {
+                    //success data
+                    console.log(data);
+                    console.log("{{url('/')}}"+"admin_profile_images/"+data.profile_image);
+                    $('#username').val(data.username);
+                    $('#name').val(data.name);
+                    $('#password').val("");
+                    $('#phone').val(data.phone);
+                    $('#edit-imagepreview').attr('src', "{{url('/')}}"+"/admin_profile_images/"+data.profile_image);
+                    $('#modal-edit').modal("show");
+                });
+            }); 
+
+        });
+    </script>
+
+    {{-- END Modal CRUD --}}
 
     {{-- Modal Error --}}
     @if ($errors->any())

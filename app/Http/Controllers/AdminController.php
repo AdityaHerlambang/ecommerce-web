@@ -7,6 +7,27 @@ use App\Admin;
 
 class AdminController extends Controller
 {
+
+    protected $routelink = 'admin/dataadmin';
+
+    protected $rules =
+    [
+        'name'     => 'required|string|max:255',
+        'username'    => 'required|string|max:255|unique:admins',
+        'password' => 'required|string|min:6',
+        'phone' => 'required|string|numeric',
+        'imageupload' => 'required|image|mimes:jpeg,png,gif,svg'
+    ];
+
+    protected $rulesUpdate =
+    [
+        'name'     => 'required|string|max:255',
+        'username'    => 'required|string|max:255|unique:admins',
+        'password' => 'string|min:6',
+        'phone' => 'required|string|numeric',
+        'imageupload' => 'image|mimes:jpeg,png,gif,svg'
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -15,9 +36,7 @@ class AdminController extends Controller
     public function index()
     {
         //
-
         $tableData = Admin::get();
-
         return view('admin.dataadmin',compact('tableData'));
     }
 
@@ -40,14 +59,7 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         //
-        //
-        $validatedData = $request->validate([
-            'name'     => 'required|string|max:255',
-            'username'    => 'required|string|max:255|unique:admins',
-            'password' => 'required|string|min:6',
-            'phone' => 'required|string|numeric',
-            'imageupload' => 'required|image|mimes:jpeg,png,jpg,gif,svg'
-        ]);
+        $validatedData = $request->validate($this->rules);
 
         $image = $request->file('imageupload');
         $image_name = time().'.'.$image->getClientOriginalExtension();
@@ -58,7 +70,7 @@ class AdminController extends Controller
 
         try {
             $validatedData['password']        = bcrypt(array_get($validatedData, 'password'));
-            $admin                             = app(Admin::class)->create($validatedData);
+            $admin                            = app(Admin::class)->create($validatedData);
             return redirect()->back();
         } catch (\Exception $exception) {
             return "unable to create new user ".$exception;
@@ -76,6 +88,10 @@ class AdminController extends Controller
     public function show($id)
     {
         //
+        $data = Admin::where('id',$id)->first();
+
+        return $data;
+        
     }
 
     /**
@@ -99,6 +115,19 @@ class AdminController extends Controller
     public function update(Request $request, $id)
     {
         //
+
+        $request = $request->validate($this->rulesUpdate);
+        
+        $data = Admin::find($id);
+        $data->username = $request->username;
+        if($request->password != ""){
+            $data->password = $request->password;
+        }
+        $data->nama = $request->nama;
+        $data->phone = $request->phone;
+        $data->save();
+
+        return redirect($this->routelink);
     }
 
     /**
@@ -110,5 +139,7 @@ class AdminController extends Controller
     public function destroy($id)
     {
         //
+        Admin::where('id', '=', $id)->delete();
+        return redirect($this->routelink);
     }
 }
