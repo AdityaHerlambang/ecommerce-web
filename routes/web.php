@@ -22,8 +22,14 @@ Route::get('/logout', 'Auth\LoginController@logout');
 // ADMIN ONLY ROUTES
 Route::group(['middleware' => 'is.admin'], function () {
     Route::prefix('admin')->group(function () {
+
         Route::get('/', 'AdminController@index');
         Route::resource('/dataadmin', 'AdminController');
+        Route::resource('/productcategory', 'ProductsCategoryController');
+        Route::resource('/courier', 'CourierController');
+        Route::resource('/product', 'ProductController');
+        Route::post('/product/image/delete', 'ProductController@destroyImage');
+
     });
 });
 

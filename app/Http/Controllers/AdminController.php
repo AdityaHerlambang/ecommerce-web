@@ -19,15 +19,6 @@ class AdminController extends Controller
         'imageupload' => 'required|image|mimes:jpeg,png,gif,svg'
     ];
 
-    protected $rulesUpdate =
-    [
-        'name'     => 'required|string|max:255',
-        'username'    => 'required|string|max:255|unique:admins',
-        'password' => 'string|min:6',
-        'phone' => 'required|string|numeric',
-        'imageupload' => 'image|mimes:jpeg,png,gif,svg'
-    ];
-
     /**
      * Display a listing of the resource.
      *
@@ -59,10 +50,11 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         //
+        // return $request;
         $validatedData = $request->validate($this->rules);
 
         $image = $request->file('imageupload');
-        $image_name = time().'.'.$image->getClientOriginalExtension();
+        $image_name = "admin-".$request->username.'.'.$image->getClientOriginalExtension();
         $destinationPath = public_path('/admin_profile_images');
         $image->move($destinationPath, $image_name);
 
@@ -116,15 +108,32 @@ class AdminController extends Controller
     {
         //
 
-        $request = $request->validate($this->rulesUpdate);
+        $rulesUpdate = [
+            'name'     => 'required|string|max:255',
+            'username'    => 'required|string|max:255|unique:admins,id,'.$request->id,
+            'phone' => 'required|string|numeric',
+            'imageupload' => 'image'
+        ];
+
+        $reqvalid = $request->validate($rulesUpdate);
         
         $data = Admin::find($id);
-        $data->username = $request->username;
-        if($request->password != ""){
-            $data->password = $request->password;
+        $data->username = $reqvalid['username'];
+        if(isset($request->password) && $request->password != ""){
+            $data->password = bcrypt($request->password);
         }
-        $data->nama = $request->nama;
-        $data->phone = $request->phone;
+        
+        if(isset($reqvalid['imageupload'])){
+            $image = $request->file('imageupload');
+            $image_name = "admin-".$reqvalid['username'].'.'.$image->getClientOriginalExtension();
+            $destinationPath = public_path('/admin_profile_images');
+            $image->move($destinationPath, $image_name);
+
+            $data->profile_image = $image_name;
+        }
+
+        $data->name = $reqvalid['name'];
+        $data->phone = $reqvalid['phone'];
         $data->save();
 
         return redirect($this->routelink);
@@ -142,4 +151,12 @@ class AdminController extends Controller
         Admin::where('id', '=', $id)->delete();
         return redirect($this->routelink);
     }
+
+    public function destroyImage(Request $request)
+    {
+        //
+        ProductImage::where('id', '=', $request->id)->delete();
+        return redirect($this->routelink);
+    }
+
 }

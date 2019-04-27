@@ -27,10 +27,10 @@
                 <!-- ============================================================== -->
                 <div class="row page-titles">
                     <div class="col-md-5 col-8 align-self-center">
-                        <h3 class="text-themecolor m-b-0 m-t-0">Data Admin</h3>
+                        <h3 class="text-themecolor m-b-0 m-t-0">{{$title}}</h3>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-                            <li class="breadcrumb-item active">Data Admin</li>
+                            <li class="breadcrumb-item active">{{$title}}</li>
                         </ol>
                     </div>
                 </div>
@@ -51,41 +51,32 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Data Admin</h4>
-                                <h6 class="card-subtitle">Berisi List Admin</h6>
+                                <h4 class="card-title">{{$title}}</h4>
+                                <h6 class="card-subtitle">Berisi List {{$title}}</h6>
                                 <div class="table-responsive m-t-40">
                                     <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Username</th>
-                                                <th>Name</th>
-                                                <th>Phone</th>
-                                                <th>Profile Image</th>
-                                                <th>Aksi</th>
+                                                <th>Courer</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Username</th>
-                                                <th>Name</th>
-                                                <th>Phone</th>
-                                                <th>Profile Image</th>
-                                                <th>Aksi</th>
+                                                <th>Courer</th>
+                                                <th>Action</th>
                                             </tr>
                                         </tfoot>
                                         <tbody>
                                             @foreach ($tableData as $data)
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
-                                                <td>{{$data->username}}</td>
-                                                <td>{{$data->name}}</td>
-                                                <td>{{$data->phone}}</td>
-                                                <td><img src="{{url('admin_profile_images/'.$data->profile_image)}}" class="img-circle" style="width:50px;height:50px;"> </td>
+                                                <td>{{$data->courier}}</td>
                                                 <td>
                                                     <button value="{{$data->id}}" class="btn btn-edit btn-primary waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>Edit</button>
-                                                    <form method='post' action='/admin/dataadmin/{{$data->id}}'>
+                                                    <form method='post' action='/admin/courier/{{$data->id}}'>
                                                         @csrf
                                                         @method('DELETE')
                                                             <button class="btn btn-danger waves-effect waves-light" type="submit"><span class="btn-label"><i class="fa fa-trash"></i></span>Delete</button>
@@ -115,7 +106,7 @@
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                 <h4 class="modal-title">Data Admin</h4>
                             </div>
-                            <form enctype="multipart/form-data" action="{{url('/admin/dataadmin')}}" method="post">
+                            <form enctype="multipart/form-data" action="{{url('/admin/courier')}}" method="post">
                                 @method('POST')
                                 @csrf
                                 <div class="modal-body">
@@ -129,40 +120,10 @@
                                                 </ul>
                                             </div>
                                         @endif
-                                        <div class="form-group" style="text-align: center">
-                                            <label for="recipient-name" class="control-label">Profile Image</label><br>
-                                            <img id="create-imagepreview" src="{{asset('images/profile-placeholder.jpg')}}" class="img-circle" style="height:100px;width:100px;display:inline-block"><br>
-                                            <input type="file" class="form-control" name="imageupload" value="" onchange="readURL(this);">
-                                            <script>
-                                            function readURL(input) {
-                                                if (input.files && input.files[0]) {
-                                                    var reader = new FileReader();
 
-                                                    reader.onload = function (e) {
-                                                        $('#create-imagepreview')
-                                                            .attr('src', e.target.result);
-                                                    };
-
-                                                    reader.readAsDataURL(input.files[0]);
-                                                }
-                                            }
-                                            </script>
-                                        </div>
                                         <div class="form-group">
-                                            <label for="recipient-name" class="control-label">Username</label>
-                                            <input type="text" class="form-control" name="username" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="message-text" class="control-label">Password</label>
-                                            <input type="password" class="form-control" name="password" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="message-text" class="control-label">Name</label>
-                                            <input type="name" class="form-control" name="name" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="message-text" class="control-label">Phone</label>
-                                            <input type="number" class="form-control" name="phone" required>
+                                            <label class="control-label">Courier</label>
+                                            <input type="text" class="form-control" name="courier" required>
                                         </div>
                                 </div>
                                 <div class="modal-footer">
@@ -176,71 +137,44 @@
                 <!-- /.modal -->
 
                 <!-- Modal Edit -->
-                <div id="modal-edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-edit" aria-hidden="true" style="display: none;">
+                <div id="modal-edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                <h4 class="modal-title">Data Admin</h4>
+                                <h4 class="modal-title">Edit</h4>
                             </div>
-                            <form enctype="multipart/form-data" method="post" id="form-edit">
+                            <form enctype="multipart/form-data" id="form-edit" method="post">
                                 @method('PUT')
                                 @csrf
-                            <div class="modal-body">
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-                                    <div class="form-group" style="text-align: center">
-                                        <label for="recipient-name" class="control-label">Profile Image</label><br>
-                                        <img id="edit-imagepreview" src="{{asset('images/profile-placeholder.jpg')}}" class="img-circle" style="height:100px;width:100px;display:inline-block"><br>
-                                        <input type="file" class="form-control" name="imageupload" onchange="readUrlEdit(this);">
-                                        <script>
-                                        function readUrlEdit(input) {
-                                            if (input.files && input.files[0]) {
-                                                var readerEdit = new FileReader();
+                                <div class="modal-body">
+                                        {{-- Error Messages --}}
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
 
-                                                readerEdit.onload = function (e) {
-                                                    $('#edit-imagepreview')
-                                                        .attr('src', e.target.result);
-                                                };
+                                        <input type="hidden" class="form-control" id="id" name="id" required>
 
-                                                readerEdit.readAsDataURL(input.files[0]);
-                                            }
-                                        }
-                                        </script>
-                                    </div>
-                                    <input type="hidden" class="form-control" name="id" id="id">
-                                    <div class="form-group">
-                                        <label for="recipient-name" class="control-label">Username</label>
-                                        <input type="text" class="form-control" id="username" name="username" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="message-text" class="control-label">Password</label>
-                                        <input type="password" class="form-control" id="password" name="password" placeholder="Kosongkan Jika Tidak Ingin Mengubah Password">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="message-text" class="control-label">Name</label>
-                                        <input type="name" class="form-control" id="name" name="name" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="message-text" class="control-label">Phone</label>
-                                        <input type="number" class="form-control" id="phone" name="phone" required>
-                                    </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-success waves-effect waves-light">Save</button>
-                            </div>
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="control-label">Courier</label>
+                                            <input type="text" class="form-control" id="courier" name="courier" required>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-success waves-effect waves-light">Save</button>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
+                <!-- /.modal -->
                 <!-- /.modal -->
 
                 {{-- END MODALS --}}
@@ -291,18 +225,14 @@
         jQuery(document).ready(function ($) {
 
             $(document).on('click','.btn-edit',function(){
-                var url = "{{url('/admin/dataadmin')}}";
+                var url = "{{url('/admin/courier')}}";
                 var id = $(this).val();
                 $.get(url + '/' + id, function (data) {
                     console.log(data);
 
-                    $('#form-edit').attr('action',"{{url('/admin/dataadmin/')}}"+"/"+id)
+                    $('#form-edit').attr('action',"{{url('/admin/courier/')}}"+"/"+id)
                     $('#id').val(id);
-                    $('#username').val(data.username);
-                    $('#name').val(data.name);
-                    $('#password').val("");
-                    $('#phone').val(data.phone);
-                    $('#edit-imagepreview').attr('src', "{{url('/')}}"+"/admin_profile_images/"+data.profile_image);
+                    $('#courier').val(data.courier);
                     $('#modal-edit').modal("show");
                 });
             }); 

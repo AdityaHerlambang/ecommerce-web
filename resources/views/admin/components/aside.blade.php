@@ -6,9 +6,9 @@
             <!-- Sidebar scroll-->
             <div class="scroll-sidebar">
                 <!-- User profile -->
-                <div class="user-profile" style="background: url(../assets/images/background/user-info.jpg) no-repeat;">
+                <div class="user-profile" style="background: url({{asset('assets/images/background/user-info.jpg')}}) no-repeat;">
                     <!-- User profile image -->
-                    <div class="profile-img"> <img src="../assets/images/users/profile.png"  alt="user" /> </div>
+                    <div class="profile-img"> <img src="{{asset('assets/images/users/profile.png')}}"  alt="user" /> </div>
                     <!-- User profile text-->
                     <div class="profile-text"> <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">User</a>
                         <div class="dropdown-menu animated flipInY">
@@ -24,6 +24,15 @@
                         <li class="nav-small-cap">Menu</li>
                         <li>
                             <a class="waves-effect waves-dark" href="{{url('/admin/dataadmin')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Data Admin </span></a>
+                        </li>
+                        <li>
+                            <a class="waves-effect waves-dark" href="{{url('/admin/productcategory')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Product Categories </span></a>
+                        </li>
+                        <li>
+                            <a class="waves-effect waves-dark" href="{{url('/admin/courier')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Courier </span></a>
+                        </li>
+                        <li>
+                            <a class="waves-effect waves-dark" href="{{url('/admin/product')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Product </span></a>
                         </li>
                         {{-- <li>
                             <a class="waves-effect waves-dark" href="/createtemplate" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Create Template </span></a>
