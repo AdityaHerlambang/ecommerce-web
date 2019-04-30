@@ -50,7 +50,7 @@
                                 <div class="row" style="margin-bottom:10px;">
                                     <div class="col-12">
                                         <form enctype="multipart/form-data" id="form-create" action="{{url('/admin/product/'.$data->id)}}" method="post">
-                                        @method('POST')
+                                        @method('PUT')
                                         @csrf
                                             <div class="row">
                                                 <div class="col-12">
@@ -70,6 +70,21 @@
                                                     <div class="form-group">
                                                         <label class="control-label">Product Name</label>
                                                         <input type="text" class="form-control" name="product_name" value="{{$data->product_name}}" required>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label">Categories</label>
+                                                        <select class="select2 m-b-10 select2-multiple" name="categories[]" style="width: 100%" multiple="multiple" required>
+                                                            @foreach ($categoryData as $dataSelect)
+                                                                <option
+                                                                    @foreach ($data->product_category_detail as $dataDetail)
+                                                                        @if ($dataDetail->product_category->id == $dataSelect->id)
+                                                                            selected="selected"
+                                                                        @endif
+                                                                    @endforeach
+                                                                value="{{$dataSelect->id}}">{{$dataSelect->category_name}}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
 
                                                     <div class="form-group">
@@ -123,7 +138,7 @@
                                                                             //     {caption: "Earth.jpg", downloadUrl: url2, size: 1218822, width: "120px", key: 2, extra: {id: 100}}
                                                                             // ],
                                                                             initialPreviewConfig: {!! $initialPreviewConfig !!},
-                                                                            deleteUrl: "url('admin/product/image/delete')",
+                                                                            deleteUrl: "{{url('admin/product/image/delete')}}",
                                                                             overwriteInitial: false,
                                                                             initialCaption: "Browse or Drag Image to the Box",
                                                                             uploadIcon : "<i class='fas fa-upload'></i>",
@@ -134,7 +149,7 @@
                                                                             browseOnZoneClick: true,
                                                                             fileActionSettings: {
                                                                                 showUpload: false, // Removing upload button from action settings
-                                                                            }
+                                                                            },
                                                                         });
                                                                 </script>
                                                     </div>
@@ -191,6 +206,8 @@
     $.validate({
         lang: 'es'
     });
+
+    $(".select2").select2();
     </script>
 
     {{-- Modal CRUD --}}

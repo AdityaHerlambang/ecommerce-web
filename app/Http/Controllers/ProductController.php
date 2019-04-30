@@ -32,10 +32,18 @@ class ProductController extends Controller
     {
         //
         $title = "Products";
-        $tableData = Product::get();
+        $tableData = Product::with('product_category_detail.product_category')->get();
+        $categoryData = ProductsCategory::get();
 
+        // return $tableData;
 
-        return view('admin.product', compact('title','tableData'));
+        // foreach($tableData as $data){
+        //     foreach ($data->product_category_detail as $dataDetail){
+        //         return $dataDetail->product_category->category_name;
+        //     }
+        // }
+
+        return view('admin.product', compact('title','tableData','categoryData'));
     }
 
     /**
@@ -65,7 +73,16 @@ class ProductController extends Controller
         // return $request;
 
         try {
+
             $id = app(Product::class)->create($validatedData)->id;
+
+            foreach($request->categories as $category){
+                $categoryDetail = new ProductCategoryDetail;
+                $categoryDetail->product_id = $id;
+                $categoryDetail->category_id = $category;
+                $categoryDetail->save();
+            }
+
         } catch (\Exception $exception) {
             return "unable to create ".$exception;
             logger()->error($exception);
@@ -83,7 +100,7 @@ class ProductController extends Controller
             $productImage->save();
         }
 
-    	return redirect('/admin/product');
+    	return redirect()->back();
     }
 
     /**
@@ -107,7 +124,8 @@ class ProductController extends Controller
     {
         //
         $title = "Products";
-        $data = Product::where('id',$id)->first();
+        $data = Product::with('product_category_detail.product_category')->where('id',$id)->first();
+        $categoryData = ProductsCategory::get();
         $dataImage = ProductImage::where('product_id',$id)->get();
 
         $initialPreview = array();
@@ -124,7 +142,7 @@ class ProductController extends Controller
             array_push($initialPreview,url('/')."/product_images/".$image->image_name);
             array_push($initialPreviewConfig,array(
                 'downloadUrl' => url('/')."/product_images/".$image->image_name,
-                'key' => $i,
+                'key' => $image->id,
                 'extra' => array('id',$image->id)
             ));
         }
@@ -132,8 +150,7 @@ class ProductController extends Controller
         $initialPreview = json_encode($initialPreview);
         $initialPreviewConfig = json_encode($initialPreviewConfig);
         
-
-        return view('admin.product.productedit', compact('title','data','initialPreview','initialPreviewConfig'));
+        return view('admin.product.productedit', compact('title','data','initialPreview','initialPreviewConfig','categoryData'));
     }
 
     /**
@@ -143,9 +160,46 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
         //
+        $reqvalid = $request;
+
+        $validatedData = $reqvalid->validate($this->rules);
+
+        //TODO :
+
+        $data = Product::find($id);
+        $data->product_name = $reqvalid['product_name'];
+        $data->price = $reqvalid['price'];
+        $data->description = $reqvalid['description'];
+        $data->product_rate = $reqvalid['product_rate'];
+        $data->stock = $reqvalid['stock'];
+        $data->save();
+
+        //Update ProductCategoryDetail
+        ProductCategoryDetail::where('product_id', '=', $id)->delete();
+        foreach($request->categories as $category){
+            $categoryDetail = new ProductCategoryDetail;
+            $categoryDetail->product_id = $id;
+            $categoryDetail->category_id = $category;
+            $categoryDetail->save();
+        }     
+
+        if(isset($request->file)){
+            $i = 0;
+            foreach($request->file as $file){
+                $i++;
+                $imageName = (time()+$i).'.'.$file->getClientOriginalExtension();
+                $file->move(public_path('product_images'), $imageName);
+                $productImage = new ProductImage;
+                $productImage->product_id = $id;
+                $productImage->image_name = $imageName;
+                $productImage->save();
+            }
+        }
+
+    	return redirect()->back();
     }
 
     /**
@@ -160,5 +214,13 @@ class ProductController extends Controller
         ProductImage::where('product_id', '=', $id)->delete();
         Product::where('id', '=', $id)->delete();
         return redirect($this->routelink);
+    }
+    public function destroyImage(Request $request)
+    {
+        //
+        // return $request->key;
+        ProductImage::where('id', '=', $request->key)->delete();
+        // return $request;
+        return 1;
     }
 }

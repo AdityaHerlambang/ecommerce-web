@@ -152,11 +152,4 @@ class AdminController extends Controller
         return redirect($this->routelink);
     }
 
-    public function destroyImage(Request $request)
-    {
-        //
-        ProductImage::where('id', '=', $request->id)->delete();
-        return redirect($this->routelink);
-    }
-
 }

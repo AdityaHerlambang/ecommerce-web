@@ -30,6 +30,7 @@
                         <h3 class="text-themecolor m-b-0 m-t-0">{{$title}}</h3>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active"><a href="{{url('/admin/product')}}">Product</a></li>
                             <li class="breadcrumb-item active">{{$title}}</li>
                         </ol>
                     </div>
@@ -58,14 +59,18 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Courer</th>
+                                                <th>Percentage</th>
+                                                <th>Start</th>
+                                                <th>End</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Courer</th>
+                                                <th>Percentage</th>
+                                                <th>Start</th>
+                                                <th>End</th>
                                                 <th>Action</th>
                                             </tr>
                                         </tfoot>
@@ -73,10 +78,12 @@
                                             @foreach ($tableData as $data)
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
-                                                <td>{{$data->courier}}</td>
+                                                <td>{{$data->percentage}}</td>
+                                                <td>{{$data->start}}</td>
+                                                <td>{{$data->end}}</td>
                                                 <td>
                                                     <button value="{{$data->id}}" class="btn btn-edit btn-primary waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>Edit</button>
-                                                    <form method='post' action='/admin/courier/{{$data->id}}'>
+                                                    <form method='post' action='/admin/product/discount/{{$data->id}}'>
                                                         @csrf
                                                         @method('DELETE')
                                                             <button class="btn btn-danger waves-effect waves-light" type="submit"><span class="btn-label"><i class="fa fa-trash"></i></span>Delete</button>
@@ -104,9 +111,9 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                <h4 class="modal-title">Add</h4>
+                                <h4 class="modal-title">Data Admin</h4>
                             </div>
-                            <form enctype="multipart/form-data" action="{{url('/admin/courier')}}" method="post">
+                            <form enctype="multipart/form-data" action="{{url('/admin/product/discount')}}" method="post">
                                 @method('POST')
                                 @csrf
                                 <div class="modal-body">
@@ -121,9 +128,22 @@
                                             </div>
                                         @endif
 
+                                        <input type="hidden" class="form-control" value="{{$id_product}}" name="id_product" required>
+
                                         <div class="form-group">
-                                            <label class="control-label">Courier</label>
-                                            <input type="text" class="form-control" name="courier" required>
+                                            <label class="control-label">Percentage</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" placeholder="percentage" name="percentage" aria-describedby="basic-addon2" required>
+                                                <span class="input-group-addon" id="basic-addon2">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Start</label>
+                                            <input class="form-control date-input" type="date" value="" name="start" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">End</label>
+                                            <input class="form-control date-input" type="date" value="" name="end" required>
                                         </div>
                                 </div>
                                 <div class="modal-footer">
@@ -160,10 +180,19 @@
                                         @endif
 
                                         <input type="hidden" class="form-control" id="id" name="id" required>
+                                        <input type="hidden" class="form-control" id="id_product" name="id_product" required>
 
                                         <div class="form-group">
-                                            <label for="recipient-name" class="control-label">Courier</label>
-                                            <input type="text" class="form-control" id="courier" name="courier" required>
+                                            <label class="control-label">Percentage</label>
+                                            <input type="text" class="form-control" name="percentage" id="percentage" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Start</label>
+                                            <input class="form-control date-input" type="date" value="" id="start" name="start" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">End</label>
+                                            <input class="form-control date-input" type="date" value="" id="end" name="end" required>
                                         </div>
                                 </div>
                                 <div class="modal-footer">
@@ -225,14 +254,17 @@
         jQuery(document).ready(function ($) {
 
             $(document).on('click','.btn-edit',function(){
-                var url = "{{url('/admin/courier')}}";
+                var url = "{{url('/admin/product/discount')}}";
                 var id = $(this).val();
                 $.get(url + '/' + id, function (data) {
                     console.log(data);
 
-                    $('#form-edit').attr('action',"{{url('/admin/courier/')}}"+"/"+id)
+                    $('#form-edit').attr('action',"{{url('/admin/product/discount/')}}"+"/"+id)
                     $('#id').val(id);
-                    $('#courier').val(data.courier);
+                    $('#id_product').val(data.id_product);
+                    $('#percentage').val(data.percentage);
+                    $('#start').val(data.start);
+                    $('#end').val(data.end);
                     $('#modal-edit').modal("show");
                 });
             }); 

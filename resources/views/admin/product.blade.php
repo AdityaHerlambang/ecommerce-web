@@ -63,6 +63,8 @@
                                                 <th>Price</th>
                                                 <th>Description</th>
                                                 <th>Rate</th>
+                                                <th>Categories</th>
+                                                <th>Discounts</th>
                                                 <th>Stock</th>
                                                 <th>Action</th>
                                             </tr>
@@ -74,6 +76,8 @@
                                                 <th>Price</th>
                                                 <th>Description</th>
                                                 <th>Rate</th>
+                                                <th>Categories</th>
+                                                <th>Discounts</th>
                                                 <th>Stock</th>
                                                 <th>Action</th>
                                             </tr>
@@ -86,18 +90,27 @@
                                                 <td>{{$data->price}}</td>
                                                 <td>{{$data->description}}</td>
                                                 <td>{{$data->product_rate}}</td>
-                                                <td>{{$data->stock}}</td>
                                                 <td>
+                                                    @foreach ($data->product_category_detail as $dataDetail)
+                                                        <button type="button" class="btn waves-effect waves-light btn-rounded btn-xs btn-primary">{{$dataDetail->product_category->category_name}}</button>
+                                                    @endforeach
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-edit btn-info waves-effect waves-light" onclick="window.location.href='{{ url('/admin/product/discount/'.$data->id.'/index') }}'" type="button"><i class="fa fa-percentage"></i></button>
+                                                </td>
+                                                <td>{{$data->stock}}</td>
+                                                <td style='display:inline-block;'>
                                                     <form method='get' action='/admin/product/{{$data->id}}/edit'>
                                                         @csrf
                                                         @method('GET')
-                                                            <button class="btn btn-edit btn-primary waves-effect waves-light" type="submit"><span class="btn-label"><i class="fa fa-edit"></i></span>Edit</button>
+                                                            <button class="btn btn-edit btn-primary waves-effect waves-light" type="submit"><i class="fa fa-edit"></i></button>
                                                     </form>
                                                     <form method='post' action='/admin/product/{{$data->id}}'>
                                                         @csrf
                                                         @method('DELETE')
-                                                            <button class="btn btn-danger waves-effect waves-light" type="submit"><span class="btn-label"><i class="fa fa-trash"></i></span>Delete</button>
+                                                            <button class="btn btn-danger waves-effect waves-light" type="submit"><i class="fa fa-trash"></i></button>
                                                     </form>
+                                                    <button onclick="window.location.href='{{ url('/product/'.$data->id) }}'" class="btn btn-success waves-effect waves-light" type="submit"><i class="fa fa-eye"></i></button>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -118,8 +131,6 @@
                 <!-- Modal Create -->
                 @include('admin.product.createmodal')
                 <!-- /.modal -->
-
-                @include('admin.product.editmodal')
 
                 {{-- END MODALS --}}
 
@@ -199,6 +210,8 @@
     {{-- End Modal Error --}}
 
     <script>
+        $(".select2").select2();
+
         $('#example23').DataTable({
             dom: 'Bfrtip',
             buttons: [

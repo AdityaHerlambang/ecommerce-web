@@ -16,7 +16,9 @@ Route::get('/', 'HomeController@index')->name('home');
 
 //AUTH ROUTES
 Auth::routes();
-Route::post('/login','Auth\LoginController@adminLogin');
+Route::get('/viewadminlogin','Auth\LoginController@viewAdminLogin');
+Route::post('/login','Auth\LoginController@userLogin');
+Route::post('/adminlogin','Auth\LoginController@adminLogin');
 Route::get('/logout', 'Auth\LoginController@logout');
 
 // ADMIN ONLY ROUTES
@@ -29,6 +31,9 @@ Route::group(['middleware' => 'is.admin'], function () {
         Route::resource('/courier', 'CourierController');
         Route::resource('/product', 'ProductController');
         Route::post('/product/image/delete', 'ProductController@destroyImage');
+
+        Route::get('/product/discount/{id}/index','DiscountController@index');
+        Route::resource('/product/discount', 'DiscountController',['except' => 'index']);
 
     });
 });

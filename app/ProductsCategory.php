@@ -11,4 +11,8 @@ class ProductsCategory extends Model
     protected $primaryKey = "id";
     protected $guarded=[];
 
+    public function detail(){
+        return $this->hasMany('App\ProductCategoryDetail','category_id');
+    }
+
 }

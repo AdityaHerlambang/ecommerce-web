@@ -45,6 +45,10 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
+    public function viewAdminLogin(){
+        return view('auth.loginadmin');
+    }
+
     public function adminLogin(Request $request){
         // return "mantap";
         $this->validate($request, [
@@ -54,9 +58,6 @@ class LoginController extends Controller
 
         if (Auth::guard('admin')->attempt(['username' => $request->username, 'password' => $request->password], $request->get('remember'))) {
             return redirect('/admin');
-        }
-        else{
-            $this->userLogin($request);
         }
 
         return back()->withInput($request->only('username', 'remember'));

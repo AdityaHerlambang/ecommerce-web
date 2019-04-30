@@ -28,6 +28,15 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="control-label">Categories</label>
+                                <select class="select2 m-b-10 select2-multiple" name="categories[]" style="width: 100%" multiple="multiple" required>
+                                    @foreach ($categoryData as $data)
+                                        <option value="{{$data->id}}">{{$data->category_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="control-label">Price</label>
                                 <input type="text" class="form-control" name="price" required>
                             </div>
