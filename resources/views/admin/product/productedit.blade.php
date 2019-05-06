@@ -31,7 +31,7 @@
                         <h3 class="text-themecolor m-b-0 m-t-0">{{$title}} Edit</h3>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-                            <li class="breadcrumb-item active">{{$title}}</li>
+                            <li class="breadcrumb-item active"><a href="{{url('admin/product')}}">{{$title}}</a></li>
                             <li class="breadcrumb-item active">Edit</li>
                         </ol>
                     </div>
@@ -82,7 +82,14 @@
                                                                             selected="selected"
                                                                         @endif
                                                                     @endforeach
-                                                                value="{{$dataSelect->id}}">{{$dataSelect->category_name}}</option>
+                                                                value="{{$dataSelect->id}}">
+                                                                {{$dataSelect->category_name}} -
+                                                                @if ($dataSelect->gender == '1')
+                                                                    Male
+                                                                @else
+                                                                    Female
+                                                                @endif
+                                                            </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -111,7 +118,7 @@
                                                             <label for="inputfile" class="control-label">Product Pictures</label>
                                                                 <input id="inputfile" name="file[]" type="file" multiple>
                                                                 {{-- <script>
-                                                                    // 
+                                                                    //
                                                                         $("#inputfile").fileinput({
                                                                             theme: "fas",
                                                                             initialCaption: "Browse or Drag Image to the Box",
@@ -184,7 +191,7 @@
     <!-- End Wrapper -->
     <!-- ============================================================== -->
     <!-- ============================================================== -->
-    
+
     @include('admin.components.mainscript')
 
     <script src="{{asset('assets/plugins/select2/dist/js/select2.full.min.js')}}" type="text/javascript"></script>
@@ -226,7 +233,7 @@
                     $('#category_name').val(data.category_name);
                     $('#modal-edit').modal("show");
                 });
-            }); 
+            });
 
         });
     </script> --}}
@@ -258,7 +265,7 @@
         $(document).ready(function() {
             $('#myTable').DataTable();
         });
-        
+
         $(".select2").select2();
     </script> --}}
 

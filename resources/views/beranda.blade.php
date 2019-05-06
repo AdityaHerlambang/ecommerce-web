@@ -25,7 +25,7 @@
 
 	<!-- Document Title
 	============================================= -->
-	<title>Home - Shop | Canvas</title>
+	<title>Home - Shop</title>
 
 	<style>
 
@@ -292,8 +292,8 @@
 
 						<ul class="tab-nav clearfix">
 							<li><a href="#tabs-9">New Arrivals</a></li>
-							<li><a href="#tabs-10">Best sellers</a></li>
-							<li><a href="#tabs-11">You may like</a></li>
+							{{-- <li><a href="#tabs-10">Best sellers</a></li>
+							<li><a href="#tabs-11">You may like</a></li> --}}
 						</ul>
 
 						<div class="tab-container">
@@ -302,30 +302,77 @@
 
 								<div id="shop" class="shop clearfix">
 
-									<div class="product clearfix">
-										<div class="product-image">
-											<a href="#"><img src="images/shop/dress/1.jpg" alt="Checked Short Dress"></a>
-											<a href="#"><img src="images/shop/dress/1-1.jpg" alt="Checked Short Dress"></a>
-											<div class="sale-flash">50% Off*</div>
-											<div class="product-overlay">
-												<a href="#" class="add-to-cart"><i class="icon-shopping-cart"></i><span> Add to Cart</span></a>
-												<a href="include/ajax/shop-item.html" class="item-quick-view" data-lightbox="ajax"><i class="icon-zoom-in2"></i><span> Quick View</span></a>
-											</div>
-										</div>
-										<div class="product-desc">
-											<div class="product-title"><h3><a href="#">Checked Short Dress</a></h3></div>
-											<div class="product-price"><del>$24.99</del> <ins>$12.49</ins></div>
-											<div class="product-rating">
-												<i class="icon-star3"></i>
-												<i class="icon-star3"></i>
-												<i class="icon-star3"></i>
-												<i class="icon-star3"></i>
-												<i class="icon-star-half-full"></i>
-											</div>
-										</div>
-									</div>
+                                    @foreach ($dataProduct as $product)
+                                        <div class="product clearfix">
+                                            <div class="product-image">
+                                                {{-- Images --}}
+                                                @php
+                                                    $i = 0;
+                                                @endphp
+                                                @foreach ($product->product_image as $image)
+                                                    @php
+                                                        $i++;
+                                                    @endphp
+                                                    @if ($i < 3)
+                                                        <a href="{{url('product/'.$image->product_id)}}"><img src="{{url('product_images/'.$image->image_name)}}"></a>
+                                                    @endif
+                                                @endforeach
 
-									<div class="product clearfix">
+                                                {{-- Discount --}}
+                                                @php
+                                                    $a = 0; $discountpercentage = 0;
+                                                @endphp
+                                                @foreach ($product->discount as $discount)
+                                                    @php
+
+                                                        // Convert to timestamp
+                                                        $start_ts = strtotime($discount->start);
+                                                        $end_ts = strtotime($discount->end);
+                                                        $user_ts = strtotime($today);
+
+                                                    @endphp
+                                                    @if (($user_ts >= $start_ts) && ($user_ts <= $end_ts))
+                                                        @php
+                                                            $a = 1; $discountpercentage = $discount->percentage;
+                                                        @endphp
+                                                        <div class="sale-flash">{{$discount->percentage}}% Off*</div>
+                                                    @endif
+                                                @endforeach
+
+                                                {{-- Buttons --}}
+                                                <div class="product-overlay">
+                                                    <a href="#" class="add-to-cart"><i class="icon-shopping-cart"></i><span> Add to Cart</span></a>
+                                                    <a href="{{url('product/'.$product->id)}}" class="item-quick-view" ><i class="icon-zoom-in2"></i><span> View Detail</span></a>
+                                                </div>
+                                            </div>
+
+                                            {{-- Description --}}
+                                            <div class="product-desc">
+                                                <div class="product-title"><h3><a href="#">{{$product->product_name}}</a></h3></div>
+                                                @if ($a == 1) {{-- Ada Discount --}}
+                                                    <div class="product-price"><del>Rp. {{$product->price}}</del> <ins>Rp. {{$product->price - (($product->price * $discountpercentage) / 100)}}</ins></div>
+                                                @else
+                                                    <div class="product-price"><ins>Rp. {{$product->price}}</ins></div>
+                                                @endif
+                                                <div class="product-rating">
+                                                    @php
+                                                        $a = 5;
+                                                    @endphp
+                                                    @for ($i = 0; $i < $product->product_rate; $i++)
+                                                        @php
+                                                            $a--;
+                                                        @endphp
+                                                        <i class="icon-star3"></i>
+                                                    @endfor
+                                                    @for ($i = 0; $i < $a; $i++)
+												        <i class="icon-star-empty"></i>
+                                                    @endfor
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+									{{-- <div class="product clearfix">
 										<div class="product-image">
 											<a href="#"><img src="images/shop/pants/1-1.jpg" alt="Slim Fit Chinos"></a>
 											<a href="#"><img src="images/shop/pants/1.jpg" alt="Slim Fit Chinos"></a>
@@ -345,64 +392,13 @@
 												<i class="icon-star-empty"></i>
 											</div>
 										</div>
-									</div>
-
-									<div class="product clearfix">
-										<div class="product-image">
-											<div class="fslider" data-arrows="false">
-												<div class="flexslider">
-													<div class="slider-wrap">
-														<div class="slide"><a href="#"><img src="images/shop/shoes/1.jpg" alt="Dark Brown Boots"></a></div>
-														<div class="slide"><a href="#"><img src="images/shop/shoes/1-1.jpg" alt="Dark Brown Boots"></a></div>
-														<div class="slide"><a href="#"><img src="images/shop/shoes/1-2.jpg" alt="Dark Brown Boots"></a></div>
-													</div>
-												</div>
-											</div>
-											<div class="product-overlay">
-												<a href="#" class="add-to-cart"><i class="icon-shopping-cart"></i><span> Add to Cart</span></a>
-												<a href="include/ajax/shop-item.html" class="item-quick-view" data-lightbox="ajax"><i class="icon-zoom-in2"></i><span> Quick View</span></a>
-											</div>
-										</div>
-										<div class="product-desc">
-											<div class="product-title"><h3><a href="#">Dark Brown Boots</a></h3></div>
-											<div class="product-price">$49</div>
-											<div class="product-rating">
-												<i class="icon-star3"></i>
-												<i class="icon-star3"></i>
-												<i class="icon-star3"></i>
-												<i class="icon-star-empty"></i>
-												<i class="icon-star-empty"></i>
-											</div>
-										</div>
-									</div>
-
-									<div class="product clearfix">
-										<div class="product-image">
-											<a href="#"><img src="images/shop/dress/2.jpg" alt="Light Blue Denim Dress"></a>
-											<a href="#"><img src="images/shop/dress/2-2.jpg" alt="Light Blue Denim Dress"></a>
-											<div class="product-overlay">
-												<a href="#" class="add-to-cart"><i class="icon-shopping-cart"></i><span> Add to Cart</span></a>
-												<a href="include/ajax/shop-item.html" class="item-quick-view" data-lightbox="ajax"><i class="icon-zoom-in2"></i><span> Quick View</span></a>
-											</div>
-										</div>
-										<div class="product-desc">
-											<div class="product-title"><h3><a href="#">Light Blue Denim Dress</a></h3></div>
-											<div class="product-price">$19.95</div>
-											<div class="product-rating">
-												<i class="icon-star3"></i>
-												<i class="icon-star3"></i>
-												<i class="icon-star3"></i>
-												<i class="icon-star3"></i>
-												<i class="icon-star-empty"></i>
-											</div>
-										</div>
-									</div>
+									</div> --}}
 
 								</div>
 
 							</div>
 
-							<div class="tab-content clearfix" id="tabs-10">
+							{{-- <div class="tab-content clearfix" id="tabs-10">
 
 								<div id="shop" class="shop clearfix">
 
@@ -601,7 +597,7 @@
 
 								</div>
 
-							</div>
+							</div> --}}
 
 						</div>
 
@@ -614,26 +610,7 @@
 							<h4>About Us</h4>
 						</div>
 						<p>Jane Jacobs educate, leverage affiliate Martin Luther King Jr. agriculture conflict resolution dignity. Cooperation international progress non-partisan lasting change meaningful.</p>
-					</div>
-
-					<div class="col_one_third subscribe-widget">
-						<div class="fancy-title title-border">
-							<h4>Subscribe for Offers</h4>
-						</div>
-						<p>Subscribe to Our Newsletter to get Important News, Amazing Offers &amp; Inside Scoops:</p>
-						<div class="widget-subscribe-form-result"></div>
-						<form id="widget-subscribe-form2" action="include/subscribe.php" role="form" method="post" class="nobottommargin">
-							<div class="input-group divcenter">
-								<div class="input-group-prepend">
-										<div class="input-group-text"><i class="icon-email2"></i></div>
-									</div>
-								<input type="email" name="widget-subscribe-form-email" class="form-control required email" placeholder="Enter your Email">
-								<div class="input-group-append">
-									<button class="btn btn-secondary" type="submit">Subscribe</button>
-								</div>
-							</div>
-						</form>
-					</div>
+                    </div>
 
 					<div class="col_one_third col_last">
 						<div class="fancy-title title-border">
@@ -711,32 +688,7 @@
 						</a>
 					</div>
 
-					<div class="clear"></div>
-
-					<div class="fancy-title title-border title-center topmargin-sm">
-						<h4>Popular Brands</h4>
-					</div>
-
-					<ul class="clients-grid grid-6 nobottommargin clearfix">
-						<li><a href="#"><img src="images/clients/logo/1.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/2.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/3.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/4.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/5.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/6.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/7.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/8.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/9.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/10.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/11.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/12.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/13.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/14.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/15.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/16.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/19.png" alt="Clients"></a></li>
-						<li><a href="#"><img src="images/clients/logo/18.png" alt="Clients"></a></li>
-					</ul>
+                    <div class="clear"></div>
 
 				</div>
 
@@ -758,8 +710,8 @@
 								<div class="fbox-icon">
 									<i class="icon-credit-cards"></i>
 								</div>
-								<h3>Payment Options</h3>
-								<p class="notopmargin">We accept Visa, MasterCard and American Express.</p>
+								<h3>Fast Payment</h3>
+								<p class="notopmargin">Experience fast and managed payment using Cart system</p>
 							</div>
 						</div>
 
@@ -768,8 +720,8 @@
 								<div class="fbox-icon">
 									<i class="icon-truck2"></i>
 								</div>
-								<h3>Free Shipping</h3>
-								<p class="notopmargin">Free Delivery to 100+ Locations on orders above $40.</p>
+								<h3>Shipping+</h3>
+								<p class="notopmargin">See shipping cost in no time!</p>
 							</div>
 						</div>
 
@@ -778,8 +730,8 @@
 								<div class="fbox-icon">
 									<i class="icon-undo"></i>
 								</div>
-								<h3>30-Days Returns</h3>
-								<p class="notopmargin">Return or exchange items purchased within 30 days.</p>
+								<h3>Order Cancelation</h3>
+								<p class="notopmargin">Easy cancelation if you changed your mind</p>
 							</div>
 						</div>
 
@@ -796,24 +748,11 @@
 						<div class="col_half subscribe-widget nobottommargin col_last">
 
 							<div class="heading-block topmargin-lg">
-								<h3><strong>GET 20% OFF*</strong></h3>
-								<span>Our App scales beautifully to different Devices.</span>
+								<h3><strong>Many Discounts !</strong></h3>
+								<span>Our shop provides many product discount !</span>
 							</div>
 
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet cumque, perferendis accusamus porro illo exercitationem molestias.</p>
-
-							<div class="widget-subscribe-form-result"></div>
-							<form id="widget-subscribe-form3" action="include/subscribe.php" role="form" method="post" class="nobottommargin">
-								<div class="input-group" style="max-width:400px;">
-									<div class="input-group-prepend">
-										<div class="input-group-text"><i class="icon-email2"></i></div>
-									</div>
-									<input type="email" name="widget-subscribe-form-email" class="form-control required email" placeholder="Enter your Email">
-									<div class="input-group-append">
-										<button class="btn btn-danger" type="submit">Subscribe Now</button>
-									</div>
-								</div>
-							</form>
+							<p>Don't miss it because it will be cheaper than regular price.</p>
 
 						</div>
 
@@ -933,7 +872,7 @@
 		<!-- Modal -->
 		<div id="modalLogin" class="modal fade" role="dialog">
 			<div class="modal-dialog">
-		
+
 			<!-- Modal content-->
 			<div class="modal-content">
 				<div class="modal-header">
@@ -953,7 +892,7 @@
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>
-		
+
 			</div>
 		</div>
 	@endif

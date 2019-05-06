@@ -14,7 +14,15 @@ class Product extends Model
     public function product_category_detail(){
         $middle = $this->hasMany('App\ProductCategoryDetail', 'product_id');
         return $middle;
-        // return $middle->getResults()->belongsTo('App\ProductCategory','id','category_id'); 
+        // return $middle->getResults()->belongsTo('App\ProductCategory','id','category_id');
+    }
+
+    public function product_image(){
+        return $this->hasMany('App\ProductImage', 'product_id');
+    }
+
+    public function discount(){
+        return $this->hasMany('App\Discount', 'id_product');
     }
 
 }

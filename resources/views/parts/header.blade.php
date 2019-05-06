@@ -26,7 +26,7 @@
 												<div class="input-group-prepend">
 													<div class="input-group-text"><i class="icon-user"></i></div>
 												</div>
-												<input id="email" type="text" class="form-control" name="username" value="{{ old('email') }}" required autofocus>
+												<input id="email" type="text" class="form-control" name="email" value="" required autofocus>
 												@if ($errors->has('email'))
 													<span class="invalid-feedback" role="alert">
 														<strong>{{ $errors->first('email') }}</strong>
@@ -50,7 +50,7 @@
 											<button type="submit" class="btn btn-primary">
 												{{ __('Login') }}
 											</button>
-			
+
 											@if (Route::has('password.request'))
 												<a class="btn btn-link" href="{{ route('password.request') }}">
 													{{ __('Forgot Your Password?') }}
@@ -67,7 +67,7 @@
 							@elseif($header == 'customer')
 								<li><a href="{{route('logout')}}">Logout</a>
 								</li>
-							@endif	
+							@endif
 						</ul>
 					</div><!-- .top-links end -->
 
@@ -99,63 +99,32 @@
 					<nav id="primary-menu">
 
 						<ul>
-							<li class="mega-menu"><a href="#"><div>Men</div><span>Out of the Box</span></a>
+							<li class="mega-menu"><a href="#"><div>Categories</div><span>Out of the Box</span></a>
 								<div class="mega-menu-content style-2 clearfix">
 									<ul class="mega-menu-column col-lg-3">
-										<li class="mega-menu-title"><a href="#"><div>Footwear</div></a>
+										<li class="mega-menu-title"><a href="#"><div>Men</div></a>
 											<ul>
-												<li><a href="#"><div>Casual Shoes</div></a></li>
-												<li><a href="#"><div>Formal Shoes</div></a></li>
-												<li><a href="#"><div>Sports shoes</div></a></li>
-												<li><a href="#"><div>Flip Flops</div></a></li>
-												<li><a href="#"><div>Slippers</div></a></li>
-												<li><a href="#"><div>Sports Sandals</div></a></li>
-												<li><a href="#"><div>Party Shoes</div></a></li>
+                                                @foreach ($dataCategory as $category)
+                                                    @if ($category->gender == '1')
+                                                        <li><a href="{{url('/category/'.$category->id)}}"><div>{{$category->category_name}}</div></a></li>
+                                                    @endif
+                                                @endforeach
 											</ul>
 										</li>
 									</ul>
 									<ul class="mega-menu-column col-lg-3">
-										<li class="mega-menu-title"><a href="#"><div>Clothing</div></a>
+										<li class="mega-menu-title"><a href="#"><div>Women</div></a>
 											<ul>
-												<li><a href="#"><div>Casual Shirts</div></a></li>
-												<li><a href="#"><div>T-Shirts</div></a></li>
-												<li><a href="#"><div>Collared Tees</div></a></li>
-												<li><a href="#"><div>Pants / Trousers</div></a></li>
-												<li><a href="#"><div>Ethnic Wear</div></a></li>
-												<li><a href="#"><div>Jeans</div></a></li>
-												<li><a href="#"><div>Sweamwear</div></a></li>
-											</ul>
-										</li>
-									</ul>
-									<ul class="mega-menu-column col-lg-3">
-										<li class="mega-menu-title"><a href="#"><div>Accessories</div></a>
-											<ul>
-												<li><a href="#"><div>Bags &amp; Backpacks</div></a></li>
-												<li><a href="#"><div>Watches</div></a></li>
-												<li><a href="#"><div>Sunglasses</div></a></li>
-												<li><a href="#"><div>Wallets</div></a></li>
-												<li><a href="#"><div>Caps &amp; Hats</div></a></li>
-												<li><a href="#"><div>Jewellery</div></a></li>
-												<li><a href="#"><div>Belts, Ties</div></a></li>
-											</ul>
-										</li>
-									</ul>
-									<ul class="mega-menu-column col-lg-3">
-										<li class="mega-menu-title"><a href="#"><div>New Arrivals</div></a>
-											<ul>
-												<li><a href="#"><div>T-Shirts</div></a></li>
-												<li><a href="#"><div>Formal Shoes</div></a></li>
-												<li><a href="#"><div>Accessories</div></a></li>
-												<li><a href="#"><div>Watches</div></a></li>
-												<li><a href="#"><div>Perfumes</div></a></li>
-												<li><a href="#"><div>Belts, Ties</div></a></li>
-												<li><a href="#"><div>Formal Shirts</div></a></li>
+                                                @foreach ($dataCategory as $category)
+                                                    @if ($category->gender == '2')
+                                                        <li><a href="{{url('/category/'.$category->id)}}"><div>{{$category->category_name}}</div></a></li>
+                                                    @endif
+                                                @endforeach
 											</ul>
 										</li>
 									</ul>
 								</div>
-							</li><!-- .mega-menu end -->
-							<li><a href="#"><div>Accessories</div><span>Awesome Works</span></a></li>
+							</li>
 						</ul>
 
 						@if (isset($header) && $header == 'customer')
@@ -196,7 +165,7 @@
 								</div>
 							</div><!-- #top-cart end -->
 						@endif
-						
+
 
 					</nav><!-- #primary-menu end -->
 

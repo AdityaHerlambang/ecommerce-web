@@ -12,7 +12,8 @@ class ProductsCategoryController extends Controller
 
     protected $rules =
     [
-        'category_name'     => 'required|string|max:255|unique:product_categories'
+        'category_name'     => 'required|string|max:255',
+        'gender'     => 'required|numeric'
     ];
 
     /**
@@ -100,13 +101,15 @@ class ProductsCategoryController extends Controller
         //
         $rulesUpdate =
         [
-            'category_name'     => 'required|string|max:255|unique:product_categories,id,'.$request->id,
+            'category_name'     => 'required|string|max:255',
+            'gender'     => 'required|numeric'
         ];
 
         $reqvalid = $request->validate($rulesUpdate);
-        
+
         $data = ProductsCategory::find($id);
         $data->category_name = $reqvalid['category_name'];
+        $data->gender = $reqvalid['gender'];
         $data->save();
 
         return redirect($this->routelink);

@@ -92,7 +92,14 @@
                                                 <td>{{$data->product_rate}}</td>
                                                 <td>
                                                     @foreach ($data->product_category_detail as $dataDetail)
-                                                        <button type="button" class="btn waves-effect waves-light btn-rounded btn-xs btn-primary">{{$dataDetail->product_category->category_name}}</button>
+                                                        <button type="button" class="btn waves-effect waves-light btn-rounded btn-xs btn-primary">
+                                                            {{$dataDetail->product_category->category_name}} -
+                                                            @if ($dataDetail->product_category->gender == '1')
+                                                                Male
+                                                            @else
+                                                                Female
+                                                            @endif
+                                                        </button>
                                                     @endforeach
                                                 </td>
                                                 <td>
@@ -121,7 +128,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
@@ -150,7 +157,7 @@
     <!-- End Wrapper -->
     <!-- ============================================================== -->
     <!-- ============================================================== -->
-    
+
     @include('admin.components.mainscript')
 
     <script src="{{asset('assets/plugins/select2/dist/js/select2.full.min.js')}}" type="text/javascript"></script>
@@ -190,7 +197,7 @@
                     $('#category_name').val(data.category_name);
                     $('#modal-edit').modal("show");
                 });
-            }); 
+            });
 
         });
     </script> --}}
@@ -224,7 +231,7 @@
         $(document).ready(function() {
             $('#myTable').DataTable();
         });
-        
+
         $(".select2").select2();
     </script> --}}
 

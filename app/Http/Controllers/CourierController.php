@@ -100,7 +100,7 @@ class CourierController extends Controller
         ];
 
         $reqvalid = $request->validate($rulesUpdate);
-        
+
         $data = Courier::find($id);
         $data->courier = $reqvalid['courier'];
         $data->save();

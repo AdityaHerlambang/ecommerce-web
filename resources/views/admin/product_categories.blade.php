@@ -3,6 +3,7 @@
 
 @include('admin.components.head')
 <link href="{{asset('assets/plugins/select2/dist/css/select2.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/plugins/bootstrap-select/bootstrap-select.min.css')}}" rel="stylesheet" />
 
 <body class="fix-header card-no-border">
 
@@ -59,6 +60,7 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Category Name</th>
+                                                <th>Gender</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -66,6 +68,7 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Category Name</th>
+                                                <th>Gender</th>
                                                 <th>Action</th>
                                             </tr>
                                         </tfoot>
@@ -74,6 +77,13 @@
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
                                                 <td>{{$data->category_name}}</td>
+                                                <td>
+                                                    @if ($data->gender == '1')
+                                                        Male
+                                                    @else
+                                                        Female
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <button value="{{$data->id}}" class="btn btn-edit btn-primary waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>Edit</button>
                                                     <form method='post' action='/admin/productcategory/{{$data->id}}'>
@@ -91,7 +101,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
@@ -124,6 +134,13 @@
                                         <div class="form-group">
                                             <label for="recipient-name" class="control-label">Category Name</label>
                                             <input type="text" class="form-control" name="category_name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Gender</label><br>
+                                            <select class="selectpicker" name="gender" data-style="btn-info btn-outline-info">
+                                                <option value="1">Male</option>
+                                                <option value="2">Female</option>
+                                            </select>
                                         </div>
                                 </div>
                                 <div class="modal-footer">
@@ -165,6 +182,13 @@
                                             <label for="recipient-name" class="control-label">Category Name</label>
                                             <input type="text" class="form-control" id="category_name" name="category_name" required>
                                         </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Gender</label><br>
+                                            <select class="selectpicker" id="gender" name="gender" data-style="btn-info btn-outline-info">
+                                                <option value="1">Male</option>
+                                                <option value="2">Female</option>
+                                            </select>
+                                        </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
@@ -195,7 +219,7 @@
     <!-- End Wrapper -->
     <!-- ============================================================== -->
     <!-- ============================================================== -->
-    
+
     @include('admin.components.mainscript')
 
     <script src="{{asset('assets/plugins/select2/dist/js/select2.full.min.js')}}" type="text/javascript"></script>
@@ -211,6 +235,8 @@
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
     <!-- end - This is for export functionality only -->
+    <script src="{{asset('assets/plugins/bootstrap-select/bootstrap-select.min.js')}}" type="text/javascript"></script>
+
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
     <script>
@@ -233,9 +259,10 @@
                     $('#form-edit').attr('action',"{{url('/admin/productcategory/')}}"+"/"+id)
                     $('#id').val(id);
                     $('#category_name').val(data.category_name);
+                    $('#gender').val(data.gender);
                     $('#modal-edit').modal("show");
                 });
-            }); 
+            });
 
         });
     </script>
@@ -255,6 +282,8 @@
     {{-- End Modal Error --}}
 
     <script>
+        $('.selectpicker').selectpicker();
+
         $('#example23').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -267,7 +296,7 @@
         $(document).ready(function() {
             $('#myTable').DataTable();
         });
-        
+
         $(".select2").select2();
     </script> --}}
 

@@ -31,7 +31,13 @@
                                 <label class="control-label">Categories</label>
                                 <select class="select2 m-b-10 select2-multiple" name="categories[]" style="width: 100%" multiple="multiple" required>
                                     @foreach ($categoryData as $data)
-                                        <option value="{{$data->id}}">{{$data->category_name}}</option>
+                                        <option value="{{$data->id}}">{{$data->category_name}} -
+                                                @if ($data->gender == '1')
+                                                    Male
+                                                @else
+                                                    Female
+                                                @endif
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -60,7 +66,7 @@
                                     <label for="input-24" class="control-label">Product Pictures</label>
                                         <input id="input-24" name="file[]" type="file" multiple>
                                         <script>
-                                            // 
+                                            //
                                                 $("#input-24").fileinput({
                                                     theme: "fas",
                                                     initialCaption: "Browse or Drag Image to the Box",
