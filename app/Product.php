@@ -25,4 +25,8 @@ class Product extends Model
         return $this->hasMany('App\Discount', 'id_product');
     }
 
+    public function product_review(){
+        return $this->hasMany('App\ProductReview', 'product_id');
+    }
+
 }

@@ -137,26 +137,33 @@
 										<h4>Shopping Cart</h4>
 									</div>
 									<div class="top-cart-items">
-										<div class="top-cart-item clearfix">
-											<div class="top-cart-item-image">
-												<a href="#"><img src="{{url('images/shop/small/1.jpg')}}" alt="Blue Round-Neck Tshirt" /></a>
-											</div>
-											<div class="top-cart-item-desc">
-												<a href="#">Blue Round-Neck Tshirt</a>
-												<span class="top-cart-item-price">$19.99</span>
-												<span class="top-cart-item-quantity">x 2</span>
-											</div>
-										</div>
-										<div class="top-cart-item clearfix">
-											<div class="top-cart-item-image">
-												<a href="#"><img src="{{url('images/shop/small/6.jpg')}}" alt="Light Blue Denim Dress" /></a>
-											</div>
-											<div class="top-cart-item-desc">
-												<a href="#">Light Blue Denim Dress</a>
-												<span class="top-cart-item-price">$24.99</span>
-												<span class="top-cart-item-quantity">x 3</span>
-											</div>
-										</div>
+
+                                        @if ($cartData != "")
+                                            @foreach ($cartData as $cart)
+                                                <div class="top-cart-item clearfix">
+                                                    <div class="top-cart-item-image">
+                                                        @php
+                                                            $a = 0;
+                                                        @endphp
+                                                        @foreach ($cart->product->product_image as $image)
+                                                            @if ($a < 1)
+                                                                <a href="#"><img src="{{asset('product_images/'.$image->image_name)}}" alt="Blue Round-Neck Tshirt" /></a>
+                                                            @endif
+                                                            @php
+                                                                $a++;
+                                                            @endphp
+                                                        @endforeach
+                                                    </div>
+                                                    <div class="top-cart-item-desc">
+                                                        <a href="#">Blue Round-Neck Tshirt</a>
+                                                        <span class="top-cart-item-price">$19.99</span>
+                                                        <span class="top-cart-item-quantity">x 2</span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+
+
 									</div>
 									<div class="top-cart-action clearfix">
 										<span class="fleft top-checkout-price">$114.95</span>

@@ -59,7 +59,12 @@
 
                             <div class="form-group">
                                 <label class="control-label">Stock</label>
-                                <input type="stock" class="form-control" name="stock" required>
+                                <input type="number" class="form-control" name="stock" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label">Weight</label>
+                                <input type="number" class="form-control" name="weight" placeholder="weight (kg)" required>
                             </div>
 
                             <div class="form-group">

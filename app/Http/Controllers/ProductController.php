@@ -21,6 +21,7 @@ class ProductController extends Controller
         'description'     => 'string',
         'product_rate'     => 'numeric',
         'stock'     => 'required|numeric',
+        'weight'     => 'required|numeric',
     ];
 
     /**
@@ -135,7 +136,7 @@ class ProductController extends Controller
         //     {caption: "Moon.jpg", downloadUrl: url1, size: 930321, width: "120px", key: 1, extra: {id: 100}},
         //     {caption: "Earth.jpg", downloadUrl: url2, size: 1218822, width: "120px", key: 2, extra: {id: 100}}
         // ],
-        
+
         $i = 0;
         foreach($dataImage as $image){
             $i++;
@@ -149,7 +150,7 @@ class ProductController extends Controller
 
         $initialPreview = json_encode($initialPreview);
         $initialPreviewConfig = json_encode($initialPreviewConfig);
-        
+
         return view('admin.product.productedit', compact('title','data','initialPreview','initialPreviewConfig','categoryData'));
     }
 
@@ -175,6 +176,7 @@ class ProductController extends Controller
         $data->description = $reqvalid['description'];
         $data->product_rate = $reqvalid['product_rate'];
         $data->stock = $reqvalid['stock'];
+        $data->weight = $reqvalid['weight'];
         $data->save();
 
         //Update ProductCategoryDetail
@@ -184,7 +186,7 @@ class ProductController extends Controller
             $categoryDetail->product_id = $id;
             $categoryDetail->category_id = $category;
             $categoryDetail->save();
-        }     
+        }
 
         if(isset($request->file)){
             $i = 0;

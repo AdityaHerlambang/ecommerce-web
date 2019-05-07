@@ -21,6 +21,13 @@ Route::post('/login','Auth\LoginController@userLogin');
 Route::post('/adminlogin','Auth\LoginController@adminLogin');
 Route::get('/logout', 'Auth\LoginController@logout');
 
+//STORE ROUTES
+Route::get('/category/{id}','HomeController@pageCategory');
+Route::get('/product/{id}','HomeController@pageProduct');
+
+//CART
+Route::resource('/cart','CartController');
+
 // ADMIN ONLY ROUTES
 Route::group(['middleware' => 'is.admin'], function () {
     Route::prefix('admin')->group(function () {
