@@ -11,6 +11,7 @@ use App\ProductCategoryDetail;
 use App\ProductImage;
 use App\ProductsCategory;
 use App\Cart;
+use App\Transaction;
 
 class HomeController extends Controller
 {
@@ -26,21 +27,31 @@ class HomeController extends Controller
         $cartData = "";
         if(Auth::guard('user')->check()){
             $cartData = $this->cartData();
+            $cartCount = 0;
+            foreach($cartData as $cart){
+                $cartCount++;
+            }
         }
         $header = $this->header();
         $dataCategory = $this->headercategories();
         $today = Carbon::today()->toDateString();
+        $transactionCount = $this->transactionCount();
 
         $dataProduct = Product::with('product_category_detail.product_category', 'product_image', 'discount')->orderBy('products.id','desc')->limit(5)->get();
 
-        return view('beranda', compact('header', 'dataCategory', 'dataProduct','today','cartData'));
+        return view('beranda', compact('header', 'dataCategory', 'dataProduct','today','cartData','cartCount','transactionCount'));
     }
 
     public function pageCategory($id){
+        $transactionCount = $this->transactionCount();
 
         $cartData = "";
         if(Auth::guard('user')->check()){
             $cartData = $this->cartData();
+            $cartCount = 0;
+            foreach($cartData as $cart){
+                $cartCount++;
+            }
         }
         $header = $this->header();
         $dataCategory = $this->headercategories();
@@ -60,14 +71,19 @@ class HomeController extends Controller
 
                                 // return $dataProduct;
 
-        return view('category', compact('header', 'dataCategory', 'dataProduct','today','categoryName','categoryId','gender','cartData'));
+        return view('category', compact('header', 'dataCategory', 'dataProduct','today','categoryName','categoryId','gender','cartData','cartCount','transactionCount'));
     }
 
     public function pageProduct(Request $request,$id){
+        $transactionCount = $this->transactionCount();
 
         $cartData = "";
         if(Auth::guard('user')->check()){
             $cartData = $this->cartData();
+            $cartCount = 0;
+            foreach($cartData as $cart){
+                $cartCount++;
+            }
         }
 
         $header = $this->header();
@@ -81,12 +97,19 @@ class HomeController extends Controller
                                 ->first();
 
 
-        return view('productdetail', compact('header', 'dataCategory', 'product','today','cartData'));
+        return view('productdetail', compact('header', 'dataCategory', 'product','today','cartData','cartCount','transactionCount'));
     }
 
     public function cartData(){
         Auth::shouldUse('user');
-        $data = Cart::with('product.product_image')->where('user_id',Auth::id())->get();
+        $data = Cart::with('product.product_image')->where('user_id',Auth::id())->where('status','notyet')->get();
+
+        return $data;
+    }
+
+    public function transactionCount(){
+        Auth::shouldUse('user');
+        $data = Transaction::where('user_id',Auth::id())->where('status','unverified')->count();
 
         return $data;
     }
@@ -103,13 +126,15 @@ class HomeController extends Controller
         return $header;
     }
 
-    public function submitReview(Request $request){
-        //TODO: Check apabila product ini telah terdeliver ke user.
-    }
-
     public function headercategories()
     {
         return ProductsCategory::get();
     }
+
+    public function submitReview(Request $request){
+        //TODO: Check apabila product ini telah terdeliver ke user.
+    }
+
+
 
 }

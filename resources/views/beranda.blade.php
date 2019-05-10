@@ -341,7 +341,7 @@
 
                                                 {{-- Buttons --}}
                                                 <div class="product-overlay">
-                                                    <a href="#" class="add-to-cart"><i class="icon-shopping-cart"></i><span> Add to Cart</span></a>
+                                                    {{-- <a href="#" class="add-to-cart"><i class="icon-shopping-cart"></i><span> Add to Cart</span></a> --}}
                                                     <a href="{{url('product/'.$product->id)}}" class="item-quick-view" ><i class="icon-zoom-in2"></i><span> View Detail</span></a>
                                                 </div>
                                             </div>

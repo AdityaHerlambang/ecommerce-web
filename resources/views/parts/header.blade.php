@@ -124,14 +124,17 @@
 										</li>
 									</ul>
 								</div>
-							</li>
+                            </li>
+                            @if (isset($header) && $header == 'customer')
+                                <li class="mega-menu"><a href="{{url('/transaction')}}"><div>Transaction ({{$transactionCount}})</div></a></li>
+                            @endif
 						</ul>
 
 						@if (isset($header) && $header == 'customer')
 							<!-- Top Cart
 							============================================= -->
 							<div id="top-cart">
-								<a href="#" id="top-cart-trigger"><i class="icon-shopping-cart"></i><span>5</span></a>
+								<a href="#" id="top-cart-trigger"><i class="icon-shopping-cart"></i><span>{{$cartCount}}</span></a>
 								<div class="top-cart-content">
 									<div class="top-cart-title">
 										<h4>Shopping Cart</h4>
@@ -155,9 +158,7 @@
                                                         @endforeach
                                                     </div>
                                                     <div class="top-cart-item-desc">
-                                                        <a href="#">Blue Round-Neck Tshirt</a>
-                                                        <span class="top-cart-item-price">$19.99</span>
-                                                        <span class="top-cart-item-quantity">x 2</span>
+                                                        <a href="#">{{$cart->product->product_name}}</a>
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -166,8 +167,7 @@
 
 									</div>
 									<div class="top-cart-action clearfix">
-										<span class="fleft top-checkout-price">$114.95</span>
-										<button class="button button-3d button-small nomargin fright">View Cart</button>
+										<button onClick="window.location.href='{{url('/cart')}}'" class="button button-3d button-small nomargin fright">View Cart</button>
 									</div>
 								</div>
 							</div><!-- #top-cart end -->

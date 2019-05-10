@@ -25,7 +25,7 @@
 
 	<!-- Document Title
 	============================================= -->
-	<title>empty</title>
+	<title>Transaction</title>
 
 	<style>
 
@@ -70,7 +70,65 @@
 
 		@include('parts.header')
 
+        <!-- Page Title
+		============================================= -->
+		<section id="page-title">
+            <div class="container clearfix">
+                <h1>Transaction</h1>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Transaction</li>
+                </ol>
+            </div>
+        </section><!-- #page-title end -->
 
+            <!-- Content
+            ============================================= -->
+            <section id="content">
+
+                <div class="content-wrap">
+
+                    <div class="container clearfix">
+
+                        <div class="row clearfix">
+
+                            <div class="col-lg-12">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Checkout Date</th>
+                                            <th>Sub Total</th>
+                                            <th>Shipping Cost</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($dataTransaction as $trans)
+                                            <tr>
+                                                <td>{{$loop->iteration}}</td>
+                                                <td>{{$trans->created_at}}</td>
+                                                <td>{{$trans->sub_total}}</td>
+                                                <td>{{$trans->shipping_cost}}</td>
+                                                <td>{{$trans->total}}</td>
+                                                <td>{{$trans->status}}</td>
+                                                <td>
+                                                    <a style="margin-top:-2%;" href="{{url('transaction/'.$trans->id)}}" class="button button-3d button-mini button-rounded button-blue">Detail | Upload Payment Proof</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </section><!-- #content end -->
 
 		@include('parts.footer')
 

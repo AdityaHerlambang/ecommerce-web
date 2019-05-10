@@ -16,7 +16,7 @@ Route::get('/', 'HomeController@index')->name('home');
 
 //AUTH ROUTES
 Auth::routes();
-Route::get('/viewadminlogin','Auth\LoginController@viewAdminLogin');
+Route::get('/loginadmin','Auth\LoginController@viewAdminLogin');
 Route::post('/login','Auth\LoginController@userLogin');
 Route::post('/adminlogin','Auth\LoginController@adminLogin');
 Route::get('/logout', 'Auth\LoginController@logout');
@@ -25,8 +25,27 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('/category/{id}','HomeController@pageCategory');
 Route::get('/product/{id}','HomeController@pageProduct');
 
-//CART
-Route::resource('/cart','CartController');
+// USER ONLY ROUTES
+Route::group(['middleware' => 'is.user'], function () {
+
+    //CART
+    Route::resource('/cart','CartController');
+    Route::get('/cart/{id}/delete','CartController@destroy');
+    Route::get('/cancelcart','CartController@cancel');
+
+    //CHECKOUT
+    Route::get('/checkout','CheckoutController@index');
+    Route::get('/updatetocheckout','CartController@updateToCheckout');
+    Route::get('/checkout/getcity','CheckoutController@city');
+    Route::get('/checkout/getshippingcost','CheckoutController@shippingCost');
+    Route::post('/checkout/submit','CheckoutController@store');
+
+    //TRANSACTION
+    Route::get('/transaction','TransactionController@index');
+    Route::get('/transaction/{id}','TransactionController@transactionDetail');
+    Route::get('/transactionsubmitproof','TransactionController@transactionDetail');
+
+});
 
 // ADMIN ONLY ROUTES
 Route::group(['middleware' => 'is.admin'], function () {
@@ -41,6 +60,11 @@ Route::group(['middleware' => 'is.admin'], function () {
 
         Route::get('/product/discount/{id}/index','DiscountController@index');
         Route::resource('/product/discount', 'DiscountController',['except' => 'index']);
+
+        //TRANSACTION
+        Route::get('/transaction','TransactionController@index');
+        Route::get('/transaction/{id}','TransactionController@transactionDetail');
+        Route::get('/transactionsubmitproof','TransactionController@transactionDetail');
 
     });
 });

@@ -116,7 +116,7 @@
 
                                                     <div class="form-group">
                                                         <label class="control-label">Weight</label>
-                                                        <input type="number" class="form-control" name="weight" value="{{$data->weight}}" placeholder="weight (kg)" required>
+                                                        <input type="number" class="form-control" name="weight" value="{{$data->weight}}" placeholder="weight (gram)" required>
                                                     </div>
 
                                                     <div class="form-group">
