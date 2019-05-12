@@ -25,7 +25,7 @@ class CheckoutController extends Controller
         Auth::shouldUse('user');
 
         //cartData = data untuk di header, dataCart = data utama
-
+        $cartCount = 0;
         $cartData = "";
         if(Auth::guard('user')->check()){
             $cartData = $this->cartData();

@@ -46,6 +46,7 @@ class HomeController extends Controller
 
     public function pageCategory($id){
         $transactionCount = $this->transactionCount();
+        $cartCount = 0;
 
         $cartData = "";
         if(Auth::guard('user')->check()){
@@ -78,6 +79,7 @@ class HomeController extends Controller
 
     public function pageProduct(Request $request,$id){
         $transactionCount = $this->transactionCount();
+        $cartCount = 0;
 
         $cartData = "";
         if(Auth::guard('user')->check()){

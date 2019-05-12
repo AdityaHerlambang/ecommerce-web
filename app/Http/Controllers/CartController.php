@@ -25,6 +25,7 @@ class CartController extends Controller
     {
         //
         Auth::shouldUse('user');
+        $cartCount = 0;
 
         //cartData = data untuk di header, dataCart = data utama
 
