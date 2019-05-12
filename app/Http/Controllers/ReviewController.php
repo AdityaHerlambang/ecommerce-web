@@ -36,6 +36,13 @@ class ReviewController extends Controller
             $transDetail = TransactionDetail::where('transaction_id',$trans->id)->get();
             foreach($transDetail as $detail){
                 if($detail->product_id == $request->product_id){
+
+                    $productCount = ProductReview::where('user_id',Auth::id())->where('product_id',$request->product_id)->count();
+
+                    if($productCount > 0 ){
+                        return redirect()->back();
+                    }
+
                     $data = new ProductReview();
                     $data->product_id = $request->product_id;
                     $data->rate = $request->rate;
