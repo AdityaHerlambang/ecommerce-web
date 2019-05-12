@@ -11,6 +11,7 @@ use App\ProductCategoryDetail;
 use App\ProductImage;
 use App\ProductsCategory;
 use App\Cart;
+use App\Transaction;
 
 
 class CartController extends Controller

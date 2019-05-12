@@ -15,4 +15,8 @@ class ProductReview extends Model
         return $this->hasOne('App\User','id','user_id');
     }
 
+    public function response(){
+        return $this->hasMany('App\Response','review_id');
+    }
+
 }

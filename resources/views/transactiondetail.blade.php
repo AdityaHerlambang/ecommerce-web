@@ -23,6 +23,7 @@
 	<link rel="stylesheet" type="text/css" href="{{asset('include/rs-plugin/css/layers.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('include/rs-plugin/css/navigation.css')}}">
 	<script src="{{asset('js/jquery.js')}}"></script>
+	<script src="{{asset('js/jquery.countdown.min.js')}}"></script>
 
 	<!-- Document Title
 	============================================= -->
@@ -104,35 +105,41 @@
                                 @method('POST')
                                 @csrf
 
-                                <input type="hidden" name="regency" class="regency_val">
-                                <input type="hidden" name="province" class="province_val">
-                                <input type="hidden" name="sub_total" class="sub_total_val">
-                                <input type="hidden" name="shipping_cost" class="shipping_cost_val">
-                                <input type="hidden" name="total" class="total_val">
+                                <input type="hidden" name="id" value="{{$dataTransaction->id}}">
 
 								<div class="col_full">
 									<label for="recipient-name" class="control-label">Proof of Payment Image</label><br>
-                                    <img id="create-imagepreview" src="{{asset('images/box-img-placeholder.png  ')}}" style="height:200px;width:200px;display:inline-block"><br>
-                                    <input type="file" class="form-control" name="imageupload" value="" onchange="readURL(this);">
-                                    <script>
-                                        function readURL(input) {
+                                    <img id="create-imagepreview"
+                                        @if ($dataTransaction->proof_of_payment == "")
+                                            src="{{asset('images/box-img-placeholder.png  ')}}"
+                                        @else
+                                            src="{{asset('proof_images/'.$dataTransaction->proof_of_payment)}}"
+                                        @endif
+                                    style="height:200px;width:200px;display:inline-block"><br>
+                                    @if ($dataTransaction->proof_of_payment == "")
+                                        <input type="file" class="form-control" name="imageupload" value="" onchange="readURL(this);">
+                                        <script>
+                                            function readURL(input) {
 
-                                            jQuery(document).ready(function ($) {
-                                                if (input.files && input.files[0]) {
-                                                    var reader = new FileReader();
+                                                jQuery(document).ready(function ($) {
+                                                    if (input.files && input.files[0]) {
+                                                        var reader = new FileReader();
 
-                                                    reader.onload = function (e) {
-                                                        $('#create-imagepreview')
-                                                            .attr('src', e.target.result);
-                                                    };
+                                                        reader.onload = function (e) {
+                                                            $('#create-imagepreview')
+                                                                .attr('src', e.target.result);
+                                                        };
 
-                                                    reader.readAsDataURL(input.files[0]);
-                                                }
-                                            });
-                                        }
-                                    </script>
+                                                        reader.readAsDataURL(input.files[0]);
+                                                    }
+                                                });
+                                            }
+                                        </script>
+                                    @endif
                                 </div>
-                                <button class="button button-3d nomargin button-green" type="submit">SUBMIT PROOF</button>
+                                @if ($dataTransaction->proof_of_payment == "")
+                                    <button class="button button-3d nomargin button-green" type="submit">SUBMIT PROOF</button>
+                                @endif
 							</form>
                         </div>
 
@@ -142,6 +149,63 @@
                             <div class="table-responsive">
                                 <table class="table cart">
                                     <tbody>
+                                        @if ($dataTransaction->proof_of_payment == "")
+                                            <tr class="cart_item">
+                                                <td class="notopborder cart-product-name">
+                                                    <h4><strong>Remaining Time</strong></h4>
+                                                </td>
+
+                                                <td class="notopborder cart-product-name">
+                                                    <div id="timer" style="display:table-cell;">
+                                                        <div style="float:left" ><h4 id="days"><strong></strong></h4></div>
+                                                        <div style="float:left" ><h4 id="hours"><strong></strong></h4></div>
+                                                        <div style="float:left" ><h4 id="minutes"><strong></strong></h4></div>
+                                                        <div style="float:left"><h4 id="seconds"><strong></strong></h4></div>
+                                                    </div>
+                                                    <script>
+
+                                                        jQuery(document).ready(function ($) {
+                                                            setInterval(function() {
+                                                                var endTime = new Date("{{$timeout}}");
+                                                                endTime = (Date.parse(endTime) / 1000);
+
+                                                                var now = new Date();
+                                                                now = (Date.parse(now) / 1000);
+
+                                                                var timeLeft = endTime - now;
+
+                                                                var days = Math.floor(timeLeft / 86400);
+                                                                var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
+                                                                var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600 )) / 60);
+                                                                var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
+
+                                                                if (hours < "10") { hours = "0" + hours; }
+                                                                if (minutes < "10") { minutes = "0" + minutes; }
+                                                                if (seconds < "10") { seconds = "0" + seconds; }
+
+                                                                $("#days").html(days + " <span>Days</span> &nbsp;");
+                                                                $("#hours").html(hours + " <span>Hours</span> &nbsp;");
+                                                                $("#minutes").html(minutes + " : &nbsp;");
+                                                                $("#seconds").html(seconds + " &nbsp;");
+                                                            }, 1000);
+
+                                                        });
+
+                                                    </script>
+                                                </td>
+                                            </tr>
+                                        @else
+                                            <tr class="cart_item">
+                                                <td class="notopborder cart-product-name">
+                                                    <h4><strong>Status</strong></h4>
+                                                </td>
+
+                                                <td class="notopborder cart-product-name">
+                                                    {{$dataTransaction->status}}
+                                                </td>
+                                            </tr>
+                                        @endif
+
                                         <tr class="cart_item">
                                             <td class="notopborder cart-product-name">
                                                 <strong>Cart Subtotal</strong>
@@ -176,6 +240,16 @@
                             <div class="accordion clearfix">
                                 <div class="acctitle"><i class="acc-closed icon-ok-circle"></i><i class="acc-open icon-remove-circle"></i>Payment Instructions</div>
                                 <div class="acc_content clearfix">Transfer amount of payment total to this BNI Bank Account : 01234567890 a/n TESTING AJA before Timeout reach 0 seconds.</div>
+                            </div>
+                            <div class="accordion clearfix">
+                                <div class="acctitle"><i class="acc-closed icon-ok-circle"></i><i class="acc-open icon-remove-circle"></i>Shipping Info</div>
+                                <div class="acc_content clearfix">
+                                    Courier : {{$dataTransaction->courier->courier}}<br>
+                                    Service : {{$dataTransaction->service}}<br>
+                                    Province : {{$dataTransaction->province}}<br>
+                                    Regency : {{$dataTransaction->regency}}<br>
+                                    Address : {{$dataTransaction->address}}
+                                </div>
                             </div>
                         </div>
 

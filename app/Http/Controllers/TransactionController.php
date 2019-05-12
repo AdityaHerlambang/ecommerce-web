@@ -38,9 +38,16 @@ class TransactionController extends Controller
 
         $transactionCount = $this->transactionCount();
 
-        $dataTransaction = Transaction::where('user_id',Auth::id())->get();
+        $dataTransaction = Transaction::with('courier')->where('user_id',Auth::id())->get();
 
         return view('transaction',compact('cartData','header','dataCategory','today','transactionCount','cartCount','dataTransaction'));
+    }
+
+    public function adminView(){
+        $title = "Transaction";
+        $tableData = Transaction::with('user','courier')->get();
+
+        return view('admin.transaction', compact('title','tableData'));
     }
 
     public function transactionDetail($id){
@@ -69,7 +76,87 @@ class TransactionController extends Controller
         $dataTransaction = Transaction::where('user_id',Auth::id())->where('id',$id)->first();
         $detailTransaction = TransactionDetail::with('product.product_image')->where('transaction_id',$id)->get();
 
-        return view('transactiondetail',compact('cartData','header','dataCategory','today','transactionCount','cartCount','dataTransaction','detailTransaction'));
+        $timeout = Carbon::createFromFormat('Y-m-d H:i:s', $dataTransaction->timeout)->format('Y/m/d H:i:s');
+        $todayTime = Carbon::now()->toDateTimeString();
+        $todayFormatted = Carbon::createFromFormat('Y-m-d H:i:s', $todayTime)->format('Y/m/d H:i:s');
+
+        return view('transactiondetail',compact('cartData','header','dataCategory','today','transactionCount','cartCount','dataTransaction','detailTransaction','timeout','todayFormatted'));
+    }
+
+    public function transactionDetailAdmin($id,$user_id){
+
+        //cartData = data untuk di header, dataCart = data utama
+
+        //START Header
+
+        $cartData = "";
+        if(Auth::guard('user')->check()){
+            $cartData = $this->cartData();
+            $cartCount = 0;
+            foreach($cartData as $cart){
+                $cartCount++;
+            }
+        }
+        $header = $this->header();
+        $dataCategory = $this->headercategories();
+        $today = Carbon::today()->toDateString();
+
+        $transactionCount = $this->transactionCount();
+
+        //END Header
+
+        $dataTransaction = Transaction::where('user_id',$user_id)->where('id',$id)->first();
+        $detailTransaction = TransactionDetail::with('product.product_image')->where('transaction_id',$id)->get();
+
+        $timeout = Carbon::createFromFormat('Y-m-d H:i:s', $dataTransaction->timeout)->format('Y/m/d H:i:s');
+        $todayTime = Carbon::now()->toDateTimeString();
+        $todayFormatted = Carbon::createFromFormat('Y-m-d H:i:s', $todayTime)->format('Y/m/d H:i:s');
+
+        return view('transactiondetail',compact('cartData','header','dataCategory','today','transactionCount','cartCount','dataTransaction','detailTransaction','timeout','todayFormatted'));
+    }
+
+    public function showTransaction($id){
+        return Transaction::where('id',$id)->first();
+    }
+
+    public function updateStatus(Request $request, $id){
+
+        Transaction::where('id', $request->id)
+          ->update(['status' => $request->status]);
+
+        return redirect()->back();
+
+    }
+
+    public function submitProof(Request $request){
+
+        $trans = Transaction::where('id',$request->id)->first();
+
+        $timeout = Carbon::parse($trans->timeout);
+        $today = Carbon::today();
+
+        if ($timeout->lessThan($today)){
+            return redirect()->back()->with('timoutexceeded','Timeout Exceeded !');
+        }
+
+        $rules =
+        [
+            'imageupload' => 'required|image|mimes:jpeg,png,gif,svg'
+        ];
+
+        $validatedData = $request->validate($rules);
+
+        $image = $request->file('imageupload');
+        $image_name = "proof-".$request->id.'.'.$image->getClientOriginalExtension();
+        $destinationPath = public_path('/proof_images');
+        $image->move($destinationPath, $image_name);
+
+        $proofOfPayment = $image_name;
+        Transaction::where('id', $request->id)
+          ->update(['proof_of_payment' => $proofOfPayment]);
+
+          return redirect()->back();
+
     }
 
     public function transactionCount(){

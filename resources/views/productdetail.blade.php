@@ -297,6 +297,59 @@
 
                                                         </div>
                                                     </li>
+
+                                                    @foreach ($review->response as $response)
+                                                        <li class="comment even thread-even depth-1">
+                                                            <div class="comment-wrap clearfix" style="margin-left: 3%;background-color:gainsboro;">
+
+                                                                <div class="comment-meta">
+                                                                    <div class="comment-author vcard">
+                                                                        <span class="comment-avatar clearfix">
+                                                                        <img alt='' src="{{asset('admin_profile_images/'.$response->admin->profile_image)}}" height='60' width='60' /></span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="comment-content clearfix">
+                                                                    <div class="comment-author">{{$response->admin->name}} (admin)<span><a href="#" title="Permalink to this comment">{{$response->created_at}}</a></span></div>
+                                                                    <p>{{$response->content}}</p>
+                                                                </div>
+
+                                                                <div class="clear"></div>
+
+                                                            </div>
+                                                        </li>
+                                                    @endforeach
+
+                                                    @if (Auth::guard('admin')->check())
+                                                    <li class="comment even thread-even depth-1">
+                                                        <div class="comment-wrap clearfix" style="margin-left: 3%;background-color:gainsboro;">
+
+                                                            <div class="comment-meta">
+                                                                <div class="comment-author vcard">
+                                                                    <span class="comment-avatar clearfix">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="comment-content clearfix">
+                                                                <div class="comment-author">Write a response<span><a href="#" title="Permalink to this comment">&nbsp;</a></span></div>
+
+                                                                <form action="{{url('response/submit')}}" method="POST">
+                                                                    @csrf
+                                                                    @method('POST')
+                                                                    <input type="hidden" value="{{$review->id}}" name="review_id">
+
+                                                                    <textarea name="content" class="sm-form-control" cols="10" rows="3" placeholder="Content"></textarea>
+                                                                    <button style="margin-top:-2%;" type="submit" class="button button-3d button-mini button-rounded button-blue">Submit</button>
+
+                                                                </form>
+                                                            </div>
+
+                                                            <div class="clear"></div>
+
+                                                        </div>
+                                                    </li>
+                                                    @endif
+
                                                 @endforeach
 
 												</ol>
@@ -315,7 +368,7 @@
 																<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 															</div>
 															<div class="modal-body">
-                                                                <form class="nobottommargin" id="template-reviewform" name="template-reviewform" action="{{url('/review/submit')}}" method="post">
+                                                                <form class="nobottommargin" id="template-reviewform" name="template-reviewform" action="{{url('review/submit')}}" method="post">
                                                                     @method('POST')
                                                                     @csrf
 

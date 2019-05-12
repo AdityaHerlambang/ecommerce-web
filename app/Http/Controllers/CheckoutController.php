@@ -62,10 +62,12 @@ class CheckoutController extends Controller
 
         $todayString = Carbon::today()->toDateString();
 
-        $today = Carbon::today();
+        $today = Carbon::now();
         $timeout = $today->addDays(3)->toDateTimeString();
 
         $courier_id = Courier::where('courier',$request->courier)->first()->id;
+
+        // return $request;
 
         $data = new Transaction;
         $data->timeout = $timeout;
@@ -77,6 +79,7 @@ class CheckoutController extends Controller
         $data->sub_total = $request->sub_total;
         $data->user_id = Auth::id();
         $data->courier_id = $courier_id;
+        $data->service = $request->service;
         $data->status = 'unverified';
         $data->save();
 
@@ -111,13 +114,13 @@ class CheckoutController extends Controller
             }
             $detail->save();
 
-            return redirect('transaction/'.$data->id);
-
         }
 
         Cart::where('user_id', Auth::id())
           ->where('status', 'notyet')
           ->update(['status' => 'checkedout']);
+
+        return redirect('transaction/'.$data->id);
 
     }
 

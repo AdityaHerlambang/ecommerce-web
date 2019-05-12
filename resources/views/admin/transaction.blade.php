@@ -40,13 +40,6 @@
                 <!-- ============================================================== -->
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
-
-                <div class="row" style="margin-bottom:10px;">
-                    <div class="col-12">
-                        <button class="btn btn-info waves-effect waves-light" data-toggle="modal" data-target="#modal-create" type="button"><span class="btn-label"><i class="fa fa-plus"></i></span>Add Data</button>
-                    </div>
-                </div>
-
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
@@ -57,15 +50,25 @@
                                     <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
-                                                <th>No</th>
+                                                <th>#</th>
+                                                <th>User (user id)</th>
+                                                <th>Sub Total</th>
+                                                <th>Total</th>
                                                 <th>Courier</th>
+                                                <th>Service</th>
+                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
-                                                <th>No</th>
+                                                <th>#</th>
+                                                <th>User (user id)</th>
+                                                <th>Sub Total</th>
+                                                <th>Total</th>
                                                 <th>Courier</th>
+                                                <th>Service</th>
+                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </tfoot>
@@ -73,14 +76,15 @@
                                             @foreach ($tableData as $data)
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
-                                                <td>{{$data->courier}}</td>
+                                                <td>{{$data->user->name}} ({{$data->user->id}})</td>
+                                                <td>{{$data->sub_total}}</td>
+                                                <td>{{$data->total}}</td>
+                                                <td>{{$data->courier->courier}}</td>
+                                                <td>{{$data->service}}</td>
+                                                <td>{{$data->status}}</td>
                                                 <td>
-                                                    <button value="{{$data->id}}" class="btn btn-edit btn-primary waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>Edit</button>
-                                                    <form method='post' action='/admin/courier/{{$data->id}}'>
-                                                        @csrf
-                                                        @method('DELETE')
-                                                            <button class="btn btn-danger waves-effect waves-light" type="submit"><span class="btn-label"><i class="fa fa-trash"></i></span>Delete</button>
-                                                    </form>
+                                                    <button style="display:block;float:left;" value="{{$data->id}}" class="btn btn-edit btn-primary waves-effect waves-light" type="button"><i class="fa fa-edit"></i></button>
+                                                    <button style="display:block;float:left;" onclick="window.location.href='{{ url('/transaction/'.$data->id.'/'.$data->user->id) }}'" class="btn btn-success waves-effect waves-light" type="submit"><i class="fa fa-eye"></i></button>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -95,46 +99,6 @@
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
-
-                {{-- MODALS --}}
-
-                <!-- Modal Create -->
-                <div id="modal-create" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                <h4 class="modal-title">Add</h4>
-                            </div>
-                            <form enctype="multipart/form-data" action="{{url('/admin/courier')}}" method="post">
-                                @method('POST')
-                                @csrf
-                                <div class="modal-body">
-                                        {{-- Error Messages --}}
-                                        @if ($errors->any())
-                                            <div class="alert alert-danger">
-                                                <ul>
-                                                    @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endif
-
-                                        <div class="form-group">
-                                            <label class="control-label">Courier</label>
-                                            <input type="text" class="form-control" name="courier" required>
-                                        </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-success waves-effect waves-light">Save</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.modal -->
 
                 <!-- Modal Edit -->
                 <div id="modal-edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
@@ -162,8 +126,14 @@
                                         <input type="hidden" class="form-control" id="id" name="id" required>
 
                                         <div class="form-group">
-                                            <label for="recipient-name" class="control-label">Courier</label>
-                                            <input type="text" class="form-control" id="courier" name="courier" required>
+                                            <label for="recipient-name" class="control-label">Status</label>
+                                            <select class="form-control" id="status" name="status" required>
+                                                <option value="unverified">unverified</option>
+                                                <option value="verified">verified</option>
+                                                <option value="delivered">delivered</option>
+                                                <option value="success">success</option>
+                                                <option value="expired">expired</option>
+                                            </select>
                                         </div>
                                 </div>
                                 <div class="modal-footer">
@@ -225,14 +195,14 @@
         jQuery(document).ready(function ($) {
 
             $(document).on('click','.btn-edit',function(){
-                var url = "{{url('/admin/courier')}}";
+                var url = "{{url('/admin/transaction')}}";
                 var id = $(this).val();
                 $.get(url + '/' + id, function (data) {
                     console.log(data);
 
-                    $('#form-edit').attr('action',"{{url('/admin/courier/')}}"+"/"+id)
+                    $('#form-edit').attr('action',"{{url('/admin/transaction/')}}"+"/"+id)
                     $('#id').val(id);
-                    $('#courier').val(data.courier);
+                    $('#status').val(data.status);
                     $('#modal-edit').modal("show");
                 });
             });

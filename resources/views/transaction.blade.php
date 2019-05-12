@@ -115,7 +115,7 @@
                                                 <td>{{$trans->total}}</td>
                                                 <td>{{$trans->status}}</td>
                                                 <td>
-                                                    <a style="margin-top:-2%;" href="{{url('transaction/'.$trans->id)}}" class="button button-3d button-mini button-rounded button-blue">Detail | Upload Payment Proof</a>
+                                                    <a style="margin-top:-2%;" href="{{url('transaction/'.$trans->id)}}" class="button button-3d button-mini button-rounded button-blue">Detail @if($trans->proof_of_payment == "") | Upload Payment Proof @endif</a>
                                                 </td>
                                             </tr>
                                         @endforeach

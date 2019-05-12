@@ -108,6 +108,7 @@
                                 <input type="hidden" name="province" class="province_val">
                                 <input type="hidden" name="sub_total" class="sub_total_val">
                                 <input type="hidden" name="shipping_cost" class="shipping_cost_val">
+                                <input type="hidden" name="service" class="service_val">
                                 <input type="hidden" name="total" class="total_val">
 
 								<div class="col_full">
@@ -133,7 +134,7 @@
                                 </div>
                                 <div class="col_full">
                                     Courier Service
-                                    <select name="service" class="sm-form-control service">
+                                    <select name="service_name" class="sm-form-control service">
                                     </select>
                                 </div>
 								<div class="col_full">
@@ -211,6 +212,7 @@
                                                 $('.sub_total_val').val($('.cartsubtotal').text());
                                                 $('.shipping_cost_val').val($('.shipping').text());
                                                 $('.total_val').val($('.totalprice').text());
+                                                $('.service_val').val($('.service option:selected').text());
 
                                                 console.log($('.total_val').val());
                                             });
@@ -249,6 +251,9 @@
                                                 else{
                                                     key = value;
                                                     select.append($('<option></option>').val(key).html(name));
+                                                    if(i == 0){
+                                                        select.val(key).change();
+                                                    }
                                                 }
                                                 i++;
                                             });
@@ -264,6 +269,7 @@
                                             $('.sub_total_val').val($('.cartsubtotal').text());
                                             $('.shipping_cost_val').val($('.shipping').text());
                                             $('.total_val').val($('.totalprice').text());
+                                            $('.service_val').val($('.service option:selected').text());
 
                                             console.log($('.total_val').val());
 

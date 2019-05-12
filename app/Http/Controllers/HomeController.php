@@ -91,11 +91,11 @@ class HomeController extends Controller
 
         $today = Carbon::today()->toDateString();
 
-        $product = Product::with('product_category_detail.product_category', 'product_review.user', 'product_image', 'discount')
+        $product = Product::with('product_category_detail.product_category', 'product_review.user', 'product_image', 'discount', 'product_review.response.admin')
                                 ->orderBy('products.id','desc')
                                 ->where('products.id',$id)
                                 ->first();
-
+                                // return $product;
 
         return view('productdetail', compact('header', 'dataCategory', 'product','today','cartData','cartCount','transactionCount'));
     }

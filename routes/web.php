@@ -25,6 +25,12 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('/category/{id}','HomeController@pageCategory');
 Route::get('/product/{id}','HomeController@pageProduct');
 
+//TRANSACTION
+Route::get('/transaction','TransactionController@index');
+Route::get('/transaction/{id}','TransactionController@transactionDetail');
+Route::get('/transaction/{id}/{userid}','TransactionController@transactionDetailAdmin');
+Route::post('/transactionsubmitproof','TransactionController@submitProof');
+
 // USER ONLY ROUTES
 Route::group(['middleware' => 'is.user'], function () {
 
@@ -40,18 +46,19 @@ Route::group(['middleware' => 'is.user'], function () {
     Route::get('/checkout/getshippingcost','CheckoutController@shippingCost');
     Route::post('/checkout/submit','CheckoutController@store');
 
-    //TRANSACTION
-    Route::get('/transaction','TransactionController@index');
-    Route::get('/transaction/{id}','TransactionController@transactionDetail');
-    Route::get('/transactionsubmitproof','TransactionController@transactionDetail');
+    Route::post('/review/submit','ReviewController@submitReview');
+
 
 });
 
 // ADMIN ONLY ROUTES
 Route::group(['middleware' => 'is.admin'], function () {
+
+    Route::post('/response/submit','ReviewController@submitResponse');
+
     Route::prefix('admin')->group(function () {
 
-        Route::get('/', 'AdminController@index');
+        Route::get('/', 'DashboardController@index');
         Route::resource('/dataadmin', 'AdminController');
         Route::resource('/productcategory', 'ProductsCategoryController');
         Route::resource('/courier', 'CourierController');
@@ -61,10 +68,9 @@ Route::group(['middleware' => 'is.admin'], function () {
         Route::get('/product/discount/{id}/index','DiscountController@index');
         Route::resource('/product/discount', 'DiscountController',['except' => 'index']);
 
-        //TRANSACTION
-        Route::get('/transaction','TransactionController@index');
-        Route::get('/transaction/{id}','TransactionController@transactionDetail');
-        Route::get('/transactionsubmitproof','TransactionController@transactionDetail');
+        Route::get('/transaction','TransactionController@adminView');
+        Route::get('/transaction/{id}','TransactionController@showTransaction');
+        Route::put('/transaction/{id}','TransactionController@updateStatus');
 
     });
 });
