@@ -25,6 +25,8 @@ class HomeController extends Controller
     public function index()
     {
         $cartData = "";
+        $cartCount = 0;
+
         if(Auth::guard('user')->check()){
             $cartData = $this->cartData();
             $cartCount = 0;
