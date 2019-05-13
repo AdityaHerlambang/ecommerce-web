@@ -62,7 +62,7 @@ class RegisterController extends Controller
             'password' => 'required|string|min:6',
             'imageupload' => 'required|image|mimes:jpeg,png,jpg,gif,svg'
         ]);
-    
+
         $image = $request->file('imageupload');
         $image_name = time().'.'.$image->getClientOriginalExtension();
         $destinationPath = public_path('/user_profile_images');

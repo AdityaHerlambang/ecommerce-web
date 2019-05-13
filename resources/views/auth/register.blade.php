@@ -69,8 +69,6 @@
 	============================================= -->
 	<div id="wrapper" class="clearfix">
 
-		@include('parts.header')
-
 		<!-- Page Title
 		============================================= -->
 		<section id="page-title">
@@ -148,7 +146,7 @@
 								<label for="register-form-name">Profile Image</label>
 								<input type="file" name="imageupload" value="" class="form-control" />
 							</div>
-	
+
 							<div class="clear"></div>
 
 							<div class="col_half">
