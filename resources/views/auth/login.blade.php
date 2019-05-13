@@ -68,8 +68,6 @@
 	============================================= -->
 	<div id="wrapper" class="clearfix">
 
-		@include('parts.header')
-
 		<!-- Page Title
 		============================================= -->
 		<section id="page-title">
