@@ -10,6 +10,7 @@ use App\ProductReview;
 use App\Response;
 use App\Transaction;
 use App\TransactionDetail;
+use App\Product;
 
 class ReviewController extends Controller
 {
@@ -25,12 +26,11 @@ class ReviewController extends Controller
         $data->save();
 
         return redirect()->back();
-
     }
 
     public function submitReview(Request $request){
         Auth::shouldUse('user');
-
+        
         $transaction = Transaction::where('user_id',Auth::id())->where('status','success')->get();
         foreach($transaction as $trans){
             $transDetail = TransactionDetail::where('transaction_id',$trans->id)->get();
@@ -49,6 +49,17 @@ class ReviewController extends Controller
                     $data->content = $request->content;
                     $data->user_id = Auth::id();
                     $data->save();
+
+                    $rateSum = ProductReview::selectRaw('SUM(rate) as ratetotal')->where('product_id',$request->product_id)
+                                                ->first()->ratetotal;
+                    $rateCount = ProductReview::where('product_id',$request->product_id)
+                                                ->count();
+
+                    $rateNow = $rateSum / $rateCount;
+                    $rateNow = ceil($rateNow);
+
+                    Product::where('id',$request->product_id)->update(['product_rate' => $rateNow]);
+
                 }
             }
         }

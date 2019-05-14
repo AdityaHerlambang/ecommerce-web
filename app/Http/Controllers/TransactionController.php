@@ -136,7 +136,7 @@ class TransactionController extends Controller
         $trans = Transaction::where('id',$request->id)->first();
 
         $timeout = Carbon::parse($trans->timeout);
-        $today = Carbon::today();
+        $today = Carbon::today()->toDateTimeString();
 
         if ($timeout->lessThan($today)){
             return redirect()->back()->with('timoutexceeded','Timeout Exceeded !');
