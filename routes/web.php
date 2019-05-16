@@ -47,6 +47,8 @@ Route::group(['middleware' => 'is.user'], function () {
     Route::post('/checkout/submit','CheckoutController@store');
 
     Route::post('/review/submit','ReviewController@submitReview');
+    Route::get('/notif/clear','HomeController@clearNotif');
+    Route::get('/notification','HomeController@viewNotif');
 
 
 });
@@ -71,6 +73,9 @@ Route::group(['middleware' => 'is.admin'], function () {
         Route::get('/transaction','TransactionController@adminView');
         Route::get('/transaction/{id}','TransactionController@showTransaction');
         Route::put('/transaction/{id}','TransactionController@updateStatus');
+
+        Route::get('/notif/clear','DashboardController@clearNotif');
+
 
     });
 });

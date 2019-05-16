@@ -11,6 +11,8 @@ use App\Response;
 use App\Transaction;
 use App\TransactionDetail;
 use App\Product;
+use App\User;
+use App\Notifications\UserNotification;
 
 class ReviewController extends Controller
 {
@@ -25,12 +27,18 @@ class ReviewController extends Controller
         $data->admin_id = Auth::id();
         $data->save();
 
+        $user_id = ProductReview::where('id',$request->review_id)->first()->user_id;
+        $namaproduk = ProductReview::selectRaw('products.product_name as product_name')->join('products','product_reviews.product_id','products.id')->where('product_reviews.id',$request->review_id)->first()->product_name;
+
+        $user = User::where('id',$user_id)->first();
+        $user->notify(new UserNotification('Admin MERESPON review Anda pada produk '.$namaproduk));
+
         return redirect()->back();
     }
 
     public function submitReview(Request $request){
         Auth::shouldUse('user');
-        
+
         $transaction = Transaction::where('user_id',Auth::id())->where('status','success')->get();
         foreach($transaction as $trans){
             $transDetail = TransactionDetail::where('transaction_id',$trans->id)->get();

@@ -6,28 +6,24 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+
 use Illuminate\Support\Facades\Auth;
 
-use App\User;
-
-class UserRegisteredSuccessfully extends Notification
+class UserNotification extends Notification
 {
     use Queueable;
 
-    /**
-     * @var User
-     */
-    protected $user;
+    private $message;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct($message)
     {
         //
-        $this->user = $user;
+        $this->message = $message;
     }
 
     /**
@@ -38,7 +34,7 @@ class UserRegisteredSuccessfully extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -49,14 +45,12 @@ class UserRegisteredSuccessfully extends Notification
      */
     public function toMail($notifiable)
     {
-        $user = $this->user;
-        return (new MailMessage)
-            ->from("herlambang.aditya456@gmail.com")
-            ->subject('Successfully created new account')
-            ->greeting(sprintf('Hello %s', $user->name))
-            ->line('You have successfully registered to our system. Please activate your account.')
-            ->action('Click Here', route('activate.user', $user->activation_code))
-            ->line('Thank you for using our web commerce!');
+        Auth::shouldUse('user');
+
+        // return (new MailMessage)
+        //             ->line('The introduction to the notification.')
+        //             ->action('Notification Action', url('/'))
+        //             ->line('Thank you for using our application!');
     }
 
     /**
@@ -67,8 +61,7 @@ class UserRegisteredSuccessfully extends Notification
      */
     public function toArray($notifiable)
     {
-        return [
-            //
-        ];
+
+        return $this->message;
     }
 }

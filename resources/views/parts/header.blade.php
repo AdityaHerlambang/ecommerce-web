@@ -45,7 +45,7 @@
 													</span>
 												@endif										</div>
 											<label class="checkbox">
-												<input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+												<input class="form-check-input" type="checkbox" name="remember" value="true" id="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
 											</label>
 											<button type="submit" class="btn btn-primary">
 												{{ __('Login') }}
@@ -126,7 +126,19 @@
 								</div>
                             </li>
                             @if (isset($header) && $header == 'customer')
+                                @php
+                                    $adaNotif = 0;
+                                    Auth::shouldUse('user');
+                                    $user = Auth::user();
+                                    $notification = $user->unreadNotifications;
+                                @endphp
+                                @foreach ($notification as $notif)
+                                    @php
+                                        $adaNotif++;
+                                    @endphp
+                                @endforeach
                                 <li class="mega-menu"><a href="{{url('/transaction')}}"><div>Transaction ({{$transactionCount}})</div></a></li>
+                                <li class="mega-menu"><a href="{{url('/notification')}}"><div>Notification ({{$adaNotif}})</div></a></li>
                             @endif
 						</ul>
 
@@ -171,7 +183,7 @@
 									</div>
 								</div>
 							</div><!-- #top-cart end -->
-						@endif
+                        @endif
 
 
 					</nav><!-- #primary-menu end -->

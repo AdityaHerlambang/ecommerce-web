@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
+use Illuminate\Notifications\Notifiable;
+
 use App\Product;
 use App\ProductCategoryDetail;
 use App\ProductImage;
@@ -14,6 +16,11 @@ use App\Cart;
 use App\Courier;
 use App\Transaction;
 use App\TransactionDetail;
+use App\User;
+use App\Admin;
+
+use App\Notifications\UserNotification;
+use App\Notifications\AdminNotification;
 
 class TransactionController extends Controller
 {
@@ -127,16 +134,30 @@ class TransactionController extends Controller
         Transaction::where('id', $request->id)
           ->update(['status' => $request->status]);
 
+        $user_id = Transaction::where('id', $request->id)->first()->user_id;
+
+        $user = User::where('id',$user_id)->first();
+        $user->notify(new UserNotification('ada TRANSAKSI Anda yang berubah status menjadi '.$request->status));
+
         return redirect()->back();
 
     }
+
+    // public function testNotif($data){
+    //     Auth::shouldUse('user');
+    //     $user = Auth::user();
+    //     $user->notify(new UserNotification('Halo Dunia !'));
+
+    //     return $user->unreadNotifications;
+
+    // }
 
     public function submitProof(Request $request){
 
         $trans = Transaction::where('id',$request->id)->first();
 
         $timeout = Carbon::parse($trans->timeout);
-        $today = Carbon::today()->toDateTimeString();
+        $today = Carbon::now();
 
         if ($timeout->lessThan($today)){
             return redirect()->back()->with('timoutexceeded','Timeout Exceeded !');
@@ -158,7 +179,11 @@ class TransactionController extends Controller
         Transaction::where('id', $request->id)
           ->update(['proof_of_payment' => $proofOfPayment]);
 
-          return redirect()->back();
+        $nama_user = Transaction::join('users','transactions.user_id','users.id')->where('transactions.id', $request->id)->first()->name;
+        $admin = Admin::first();
+        $admin->notify(new AdminNotification('ada UPDATE BUKTI pada transaksi user '.$nama_user));
+
+        return redirect()->back();
 
     }
 

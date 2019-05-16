@@ -261,7 +261,7 @@
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ]
         });
-        </script>
+    </script>
 
     {{-- <script>
         $(document).ready(function() {

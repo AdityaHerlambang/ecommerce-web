@@ -44,6 +44,20 @@ class HomeController extends Controller
         return view('beranda', compact('header', 'dataCategory', 'dataProduct','today','cartData','cartCount','transactionCount'));
     }
 
+    public function clearNotif(){
+        Auth::shoulduse('user');
+        $user = Auth::user();
+        $user->unreadNotifications()->update(['read_at' => now()]);
+    }
+
+    public function viewNotif(){
+        Auth::shoulduse('user');
+        $user = Auth::user();
+        $dataNotif = $user->unreadNotifications;
+
+        return view('notification',compact('dataNotif'));
+    }
+
     public function pageCategory($id){
         $transactionCount = $this->transactionCount();
         $cartCount = 0;

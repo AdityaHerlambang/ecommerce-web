@@ -46,12 +46,12 @@
 						</div>
 
 						<div class="card divcenter noradius noborder" style="max-width: 400px; background-color: rgba(255,255,255,0.93);">
-                            <div class="card-body" style="padding: 40px;">                                
+                            <div class="card-body" style="padding: 40px;">
                                 <form action="{{ url('/adminlogin') }}" id="login-form" name="login-form" class="nobottommargin" method="post">
                                     @method('POST')
                                     @csrf
                                     <h4 style="text-align: center;">Login to your Admin Account</h4>
-                                    
+
                                     {{-- Error Messages --}}
                                     @if ($errors->any())
                                         <div class="alert alert-danger">
@@ -71,6 +71,11 @@
 									<div class="col_full">
 										<label for="login-form-password">Password:</label>
 										<input type="password" id="login-form-password" name="password" value="" class="form-control not-dark" />
+                                    </div>
+
+                                    <div class="col_full">
+										<label for="login-form-password">Remmeber Me</label>
+										<input type="checkbox" id="login-form-remember" name="remember" value="true" class="form-control not-dark" />
 									</div>
 
 									<div class="col_full nobottommargin">

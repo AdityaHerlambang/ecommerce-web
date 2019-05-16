@@ -21,7 +21,10 @@
 	<!-- SLIDER REVOLUTION 5.x CSS SETTINGS -->
 	<link rel="stylesheet" type="text/css" href="include/rs-plugin/css/settings.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="include/rs-plugin/css/layers.css">
-	<link rel="stylesheet" type="text/css" href="include/rs-plugin/css/navigation.css">
+    <link rel="stylesheet" type="text/css" href="include/rs-plugin/css/navigation.css">
+
+	<script src="js/jquery.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 	<!-- Document Title
 	============================================= -->
@@ -90,16 +93,24 @@
 
 				<div class="container clearfix">
 
-					<div class="accordion accordion-lg divcenter nobottommargin clearfix" style="max-width: 550px;">
-						@if (Session::has('verifysuccess'))
-							<script>
-								swal("Success", "{{Session::get('verifysuccess')}}", "success");
-							</script>
+                    <div class="accordion accordion-lg divcenter nobottommargin clearfix" style="max-width: 550px;">
+                        @if (Session::has('verifysuccess'))
+                            <script>
+                                jQuery(document).ready(function ($) {
+                                    $(function(){
+                                        swal("Success", "{{Session::get('verifysuccess')}}", "success");
+                                    });
+                                });
+                            </script>
 						@endif
-						@if (Session::has('registersuccess'))
-							<script>
-								swal("Success", "{{Session::get('registersuccess')}}", "success");
-							</script>
+                        @if (Session::has('registersuccess'))
+                            <script>
+                                jQuery(document).ready(function ($) {
+                                    $(function(){
+								        swal("Success", "{{Session::get('registersuccess')}}", "success");
+                                    });
+                                });
+                            </script>
 						@endif
 						<div class="acctitle"><i class="acc-closed icon-lock3"></i><i class="acc-open icon-unlock"></i>Login to your Account</div>
 						<div class="acc_content clearfix">
@@ -140,7 +151,6 @@
 
 	<!-- External JavaScripts
 	============================================= -->
-	<script src="js/jquery.js"></script>
 	<script src="js/plugins.js"></script>
 
 	<!-- Footer Scripts

@@ -46,8 +46,85 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Grafik Penjualan Per Bulan</h4>
+                                <h4 class="card-title">Grafik Penjualan Tahun {{$tahun}}</h4>
                                 <div id="extra-area-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Jumlah Penjualan Tahun {{$tahun}} </h4>
+                                <div class="table-responsive m-t-40">
+                                    <table class="tabledata display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Bulan</th>
+                                                <th>Jumlah Penjualan</th>
+                                                <th>Total Penjualan</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Bulan</th>
+                                                <th>Jumlah Penjualan</th>
+                                                <th>Total Penjualan</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            @foreach ($dataChart as $data)
+                                            <tr>
+                                                <td>{{$loop->iteration}}</td>
+                                                <td>{{$data['bulan']}}</td>
+                                                <td>{{$data['jumlah']}}</td>
+                                                <td>{{$data['penjualan']}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Jumlah Penjualan Pertahun</h4>
+                                <div class="table-responsive m-t-40">
+                                    <table class="tabledata display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Tahun</th>
+                                                <th>Jumlah Penjualan</th>
+                                                <th>Total Penjualan</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Tahun</th>
+                                                <th>Jumlah Penjualan</th>
+                                                <th>Total Penjualan</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            @foreach ($dataPertahun as $data)
+                                            <tr>
+                                                <td>{{$loop->iteration}}</td>
+                                                <td>{{$data['tahun']}}</td>
+                                                <td>{{$data['jumlah']}}</td>
+                                                <td>{{$data['penjualan']}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -93,6 +170,15 @@
     <script src="{{asset('js/waves.js')}}"></script>
     <script src="{{asset('assets/plugins/raphael/raphael-min.js')}}"></script>
     <script src="{{asset('assets/plugins/morrisjs/morris.js')}}"></script>
+
+    <script>
+        $('.tabledata').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    </script>
 
     <script>
 
