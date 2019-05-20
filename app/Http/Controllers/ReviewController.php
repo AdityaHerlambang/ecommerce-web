@@ -12,7 +12,9 @@ use App\Transaction;
 use App\TransactionDetail;
 use App\Product;
 use App\User;
+use App\Admin;
 use App\Notifications\UserNotification;
+use App\Notifications\AdminNotification;
 
 class ReviewController extends Controller
 {
@@ -67,6 +69,12 @@ class ReviewController extends Controller
                     $rateNow = ceil($rateNow);
 
                     Product::where('id',$request->product_id)->update(['product_rate' => $rateNow]);
+
+                    $name = Auth::user()->name;
+                    $product_name = Product::where('id',$request->product_id)->first()->product_name;
+
+                    $admin = Admin::first();
+                    $admin->notify(new AdminNotification('user '.$name.' MEREVIEW produk '.$product_name));
 
                 }
             }

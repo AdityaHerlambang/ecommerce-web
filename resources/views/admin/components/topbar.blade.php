@@ -44,11 +44,6 @@
                                             @php
                                                 $adaNotif = 1;
                                             @endphp
-                                            <a href="#">
-                                                <div class="mail-contnet">
-                                                    <h5>{{$notif->data}}</h5> <span class="mail-desc"></span> <span class="time">{{$notif->created_at}}</span>
-                                                </div>
-                                            </a>
                                         @endforeach
                                         @if ($adaNotif)
                                             <div class="notify adanotif"> <span class="heartbit"></span> <span class="point"></span> </div>

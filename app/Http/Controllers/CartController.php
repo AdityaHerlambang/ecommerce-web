@@ -11,7 +11,9 @@ use App\ProductCategoryDetail;
 use App\ProductImage;
 use App\ProductsCategory;
 use App\Cart;
+use App\Admin;
 use App\Transaction;
+use App\Notifications\AdminNotification;
 
 
 class CartController extends Controller
@@ -68,6 +70,11 @@ class CartController extends Controller
 
             $i++;
         }
+
+        $nama_user = Auth::user()->name;
+        $admin = Admin::first();
+        $admin->notify(new AdminNotification('user '.$nama_user.' melakukan transaksi baru'));
+
         return redirect('/checkout');
     }
 
