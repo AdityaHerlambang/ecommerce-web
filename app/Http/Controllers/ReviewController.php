@@ -34,7 +34,7 @@ class ReviewController extends Controller
         $namaproduk = ProductReview::selectRaw('products.product_name as product_name')->join('products','product_reviews.product_id','products.id')->where('product_reviews.id',$request->review_id)->first()->product_name;
 
         $user = User::where('id',$user_id)->first();
-        $user->notify(new UserNotification('<a href=">'.url('product/'.$product_id).'">Admin MERESPON review Anda pada produk '.$namaproduk.'</a>'));
+        $user->notify(new UserNotification('<a href="'.url('product/'.$product_id).'">Admin MERESPON review Anda pada produk '.$namaproduk.'</a>'));
 
         return redirect()->back();
     }
@@ -75,7 +75,7 @@ class ReviewController extends Controller
                     $product_name = Product::where('id',$request->product_id)->first()->product_name;
 
                     $admin = Admin::first();
-                    $admin->notify(new AdminNotification('<a href=">'.url('product/'.$request->product_id).'">user '.$name.' MEREVIEW produk '.$product_name.'</a>'));
+                    $admin->notify(new AdminNotification('<a href="'.url('product/'.$request->product_id).'">user '.$name.' MEREVIEW produk '.$product_name.'</a>'));
 
                 }
             }
