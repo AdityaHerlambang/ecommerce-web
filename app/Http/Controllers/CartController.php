@@ -71,10 +71,6 @@ class CartController extends Controller
             $i++;
         }
 
-        $nama_user = Auth::user()->name;
-        $admin = Admin::first();
-        $admin->notify(new AdminNotification('user '.$nama_user.' melakukan transaksi baru'));
-
         return redirect('/checkout');
     }
 

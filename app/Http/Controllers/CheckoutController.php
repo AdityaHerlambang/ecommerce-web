@@ -116,6 +116,11 @@ class CheckoutController extends Controller
 
         }
 
+
+        $nama_user = Auth::user()->name;
+        $admin = Admin::first();
+        $admin->notify(new AdminNotification('<a href=">'.url('transaction/'.$data->id).'">user '.$nama_user.' melakukan transaksi baru'.'</a>'));
+
         Cart::where('user_id', Auth::id())
           ->where('status', 'notyet')
           ->update(['status' => 'checkedout']);

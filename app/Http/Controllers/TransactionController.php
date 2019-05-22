@@ -137,7 +137,7 @@ class TransactionController extends Controller
         $user_id = Transaction::where('id', $request->id)->first()->user_id;
 
         $user = User::where('id',$user_id)->first();
-        $user->notify(new UserNotification('ada TRANSAKSI Anda yang berubah status menjadi '.$request->status));
+        $user->notify(new UserNotification('<a href=">'.url('transaction/'.$request->id).'">ada TRANSAKSI Anda yang berubah status menjadi '.$request->status,'</a>'));
 
         return redirect()->back();
 
@@ -181,7 +181,7 @@ class TransactionController extends Controller
 
         $nama_user = Transaction::join('users','transactions.user_id','users.id')->where('transactions.id', $request->id)->first()->name;
         $admin = Admin::first();
-        $admin->notify(new AdminNotification('ada UPDATE BUKTI pada transaksi user '.$nama_user));
+        $admin->notify(new AdminNotification('<a href=">'.url('transaction/'.$request->id).'">ada UPDATE BUKTI pada transaksi user '.$nama_user.'</a>'));
 
         return redirect()->back();
 
